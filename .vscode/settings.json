@@ -30,6 +30,15 @@
         "xutility": "cpp",
         "queue": "cpp",
         "stack": "cpp",
-        "type_traits": "cpp"
+        "type_traits": "cpp",
+        "functional": "cpp",
+        "ratio": "cpp",
+        "scoped_allocator": "cpp",
+        "tuple": "cpp",
+        "compare": "cpp",
+        "future": "cpp",
+        "memory": "cpp",
+        "xmemory": "cpp",
+        "xtr1common": "cpp"
     }
 }

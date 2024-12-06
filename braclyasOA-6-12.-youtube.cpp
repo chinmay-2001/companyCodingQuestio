@@ -56,7 +56,63 @@ int main()
     cin>>tc ;
 
     while(tc--){
-        
+        int n,e,k;
+        int s,cb;
+        int p;
+        cin>>n;
+        cin>>s>>cb;
+        cin>>k;
+        cin>>e>>p;
+
+        vector<pair<int,int>> adj[n+1];
+        vector<int> w(n);
+        for(int i=0;i<e;i++){
+            int u,v,weight;
+            cin>>u>>v>>weight;
+            adj[u].push_back(make_pair(v,weight));
+            w[u]=weight;
+        }
+        // int s;
+        // cin>>s;
+        vector<vector<int>> d(n+1,vector<int>(k+1,INT_MAX));
+        priority_queue< pair<int,pair<int,int>>, vector<pair<int,pair<int,int>>> , greater<pair<int,pair<int,int>>> > que;
+        for(int i=0;i<=k;i++){
+            d[s][i]=0;
+            que.push({d[s][i],{s,i}});
+        }
+
+        while(!que.empty()){
+            pair<int,pair<int,int>> top=que.top();
+            que.pop();
+            int wu=top.first;
+            int node=top.second.first;
+            int nk=top.second.second;        
+            if(wu==d[node][nk]){
+                for(auto p:adj[node]){
+                    int n=p.first;
+                    int wv=p.second;
+                    if(d[node][nk]+wv<d[n][nk]){
+                        d[n][nk]=d[node][nk]+wv;    
+                        que.push({d[n][nk],{n,nk}});
+                    }
+                    
+                    if(nk+1<=k and d[node][nk]<d[n][nk+1]){
+                        d[n][nk+1]=d[node][nk];
+                        que.push({d[n][nk+1],{n,nk+1}});
+                    }
+                }
+            }
+        }
+
+        // for(int i=1;i<=n;i++){
+        //     cout<<d[i]<<" ";
+        // }
+        if(d[cb][k]==INT_MAX){
+            cout<<-1<<endl;
+        }else{
+            cout<<d[cb][k]<<endl;
+        }
+        cout<<endl;
     }
     return 0;
 }

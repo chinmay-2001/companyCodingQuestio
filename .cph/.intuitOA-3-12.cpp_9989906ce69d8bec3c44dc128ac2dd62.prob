@@ -1,0 +1,1 @@
+{"name":"Local: intuitOA-3-12","url":"c:\\Users\\Chinm\\OneDrive\\Desktop\\CodingQuestion\\intuitOA-3-12.cpp","tests":[{"id":1733238883841,"input":"2\n4 1\n1 1 1 2\n2 0\n1 2","output":"1\n2"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"c:\\Users\\Chinm\\OneDrive\\Desktop\\CodingQuestion\\intuitOA-3-12.cpp","group":"local","local":true}

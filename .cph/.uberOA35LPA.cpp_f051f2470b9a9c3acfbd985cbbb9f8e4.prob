@@ -1,0 +1,1 @@
+{"name":"Local: uberOA35LPA","url":"c:\\Users\\Chinm\\OneDrive\\Desktop\\CodingQuestion\\uberOA35LPA.cpp","tests":[{"id":1732894567806,"input":"3\n3\n1 2 3\n2\n10 2\n1\n8","output":"198\n1344\n88"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"c:\\Users\\Chinm\\OneDrive\\Desktop\\CodingQuestion\\uberOA35LPA.cpp","group":"local","local":true}

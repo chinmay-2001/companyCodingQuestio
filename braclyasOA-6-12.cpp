@@ -1,6 +1,6 @@
 #include <bits/stdc++.h>
 using namespace std;
-
+// https://www.desiqna.in/10567/barclays-sde-coding-oa-questions-and-solutions-set-8-2022-dp
 /* clang-format off */
 
 /* TYPES  */
@@ -74,9 +74,6 @@ int main()
         dp[1][1]=a[0];
         dp[1][2]=b[0];
         dp[1][0]=0;
-        // dp[2][1]=a[1]+max(dp[1][1],dp[1][2],dp[1][0]);
-        // dp[2][2]= b[1];
-        // dp[2][0]=max(dp[1][1],max(dp[1][2],dp[1][0]));
         for(int i=2;i<=n;i++){
             dp[i][1]=a[i-1]+max(dp[i-1][1],max(dp[i-1][2],dp[i-1][0]));
             dp[i][2]=b[i-1]+dp[i-1][0];

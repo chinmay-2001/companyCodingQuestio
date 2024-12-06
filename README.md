@@ -1,2 +1,2 @@
-# companyCodingQuestio
+# Company Coding Question
 company coding question

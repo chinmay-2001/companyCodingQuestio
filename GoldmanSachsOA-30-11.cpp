@@ -1,3 +1,5 @@
+// https://docs.google.com/document/d/1sdC79EQT1WJindKKfyaHEB6plr-PePeC9lz23Xav6lk/edit
+
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -61,8 +63,8 @@ int main()
         for(int i=0;i<n;i++)cin>>nums[i];
         vector<vector<int>> dp(n+1,vector<int>(3,0));
         dp[0][1]=nums[0];
-        dp[0][2]=INT_MAX;
-        dp[1][1]=INT_MAX;
+        dp[0][2]=1e9;
+        dp[1][1]=1e9;
         dp[1][2]=nums[0]+nums[2]+nums[1];
 
         for(int i=2;i<n-1;i++){
@@ -70,8 +72,8 @@ int main()
             dp[i][2]=nums[i]+nums[i+1]+dp[i-1][1];
         }
         dp[n-1][1]=nums[n-1]+min(dp[n-3][1],dp[n-3][2]);
-        dp[n-1][2]=INT_MAX;
-        cout<<min(dp[n-1][1],max(dp[n-2][1],dp[n-2][2]))<<endl;
+        dp[n-1][2]=1e9;
+        cout<<min(dp[n-1][1],min(dp[n-2][1],dp[n-2][2]))<<endl;
     }
     return 0;
 }

@@ -62,9 +62,9 @@ int main()
         for(int i=0;i<n;i++){
             cin>>nums[i];           
         }
-        map<int,int> values;
+        // map<int,int> values;
         // map<pair<int,int>,int> pa;
-        int cnt=0;
+        // int cnt=0;
         // for(int i=0;i<n;i++){
         //     int num=nums[i];
         //     values[num]=1;
@@ -85,7 +85,17 @@ int main()
         //         }
         //     }
         // }
-
+        map<int,int> ma;
+        for(auto p:nums){
+            ma[p]++;
+        }
+        int cnt=0;
+        for(auto p:ma){
+            int req=p.first+k;
+            if(ma.find(req)!=ma.end()){
+                cnt++;   
+            }
+        }
 
         cout<<cnt<<endl;
     }

@@ -39,6 +39,12 @@
         "future": "cpp",
         "memory": "cpp",
         "xmemory": "cpp",
-        "xtr1common": "cpp"
+        "xtr1common": "cpp",
+        "xlocale": "cpp",
+        "ios": "cpp",
+        "xiosbase": "cpp",
+        "algorithm": "cpp",
+        "limits": "cpp",
+        "concepts": "cpp"
     }
 }

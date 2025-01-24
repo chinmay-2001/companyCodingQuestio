@@ -1,5 +1,3 @@
-// https://docs.google.com/document/d/1sdC79EQT1WJindKKfyaHEB6plr-PePeC9lz23Xav6lk/edit
-
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -48,32 +46,53 @@ typedef unsigned long int uint32;
 typedef long long int int64;
 typedef unsigned long long int  uint64;
 
-
 /* clang-format on */
 
 /* Main()  function */
 int main()
 {
     int tc;
-    cin>>tc ;
-    while(tc--){
-        int n;
-        cin>>n;
-        vector<int> nums(n);
-        for(int i=0;i<n;i++)cin>>nums[i];
-        vector<vector<int>> dp(n+1,vector<int>(3,0));
-        dp[0][1]=nums[0];
-        dp[0][2]=1e9;
-        dp[1][1]=1e9;
-        dp[1][2]=nums[0]+nums[2]+nums[1];
+    cin >> tc;
 
-        for(int i=2;i<n-1;i++){
-            dp[i][1]=nums[i]+min(dp[i-2][1],dp[i-2][2]);
-            dp[i][2]=nums[i]+nums[i+1]+dp[i-1][1];
+    while (tc--)
+    {
+        int n, x, m;
+        cin >> n >> m;
+        vi p(n + 1);
+        vi mini(n + 1);
+        vi maxi(n + 1);
+        vi y(n + 1);
+
+        f(i, 0, n) cin >> p[i];
+        f(i, 0, n) cin >> mini[i];
+        f(i, 0, n) cin >> maxi[i];
+        f(i, 0, n) cin >> y[i];
+
+        vector<vector<int>> dp(n + 1, vector<int>(m + 1, -1e9));
+
+        for (int i = 0; i <= n; i++)
+        {
+            for (int j = 0; j <= m; j++)
+            {
+                if (i == 0 or j == 0)
+                {
+                    dp[i][j] = 0;
+                    continue;
+                }
+                for (int qua = mini[i - 1]; qua <= maxi[i - 1]; qua++)
+                {
+
+                    int cost = p[i - 1] * qua;
+                    int hap = y[i - 1] * qua;
+
+                    if (cost <= j)
+                    {
+                        dp[i][j] = max(dp[i][j], hap + dp[i - 1][j - cost]);
+                    }
+                }
+            }
         }
-        dp[n-1][1]=nums[n-1]+min(dp[n-3][1],dp[n-3][2]);
-        dp[n-1][2]=1e9;
-        cout<<min(dp[n-1][1],min(dp[n-2][1],dp[n-2][2]))<<endl;
+        cout << dp[n][m] << endl;
     }
     return 0;
 }

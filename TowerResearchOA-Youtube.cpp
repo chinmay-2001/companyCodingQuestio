@@ -1,4 +1,4 @@
-// https://docs.google.com/document/d/1sdC79EQT1WJindKKfyaHEB6plr-PePeC9lz23Xav6lk/edit
+// https://docs.google.com/document/d/1nJqhVBG0CaTkMTL_602SlxIlUD2PR8WaiccR9aGy4QA/edit?tab=t.0
 
 #include <bits/stdc++.h>
 using namespace std;
@@ -55,25 +55,34 @@ typedef unsigned long long int  uint64;
 int main()
 {
     int tc;
-    cin>>tc ;
-    while(tc--){
-        int n;
-        cin>>n;
-        vector<int> nums(n);
-        for(int i=0;i<n;i++)cin>>nums[i];
-        vector<vector<int>> dp(n+1,vector<int>(3,0));
-        dp[0][1]=nums[0];
-        dp[0][2]=1e9;
-        dp[1][1]=1e9;
-        dp[1][2]=nums[0]+nums[2]+nums[1];
+    cin>>tc;
 
-        for(int i=2;i<n-1;i++){
-            dp[i][1]=nums[i]+min(dp[i-2][1],dp[i-2][2]);
-            dp[i][2]=nums[i]+nums[i+1]+dp[i-1][1];
+    while(tc--){
+        int n,k;
+        cin>>n>>k;
+        vi v(n);
+        f(i,0,n)cin>>v[i];
+
+        unordered_map<int,int> m[k+1];
+
+        for(int i=1;i<=k;i++){
+            int id=i%k;
+            m[id][v[i]]++;
         }
-        dp[n-1][1]=nums[n-1]+min(dp[n-3][1],dp[n-3][2]);
-        dp[n-1][2]=1e9;
-        cout<<min(dp[n-1][1],min(dp[n-2][1],dp[n-2][2]))<<endl;
+
+        vector<vector<int>> dp(n+1,vector<int>(64,1e9));
+        dp[0][0]=0;
+
+        for(int i=1;i<=n;i++){
+            for(int goal=0;goal<64;goal++){
+                int countofIndex=(n-i)/k+1;
+                for(int xr=0;xr<64;xr++){
+                    dp[i][goal]=min(  dp[i][goal] , dp[i-1][xr*goal] + countofIndex - m[i%k][xr]  );
+                }        
+            }
+        }
+
+        cout<<dp[k][0]<<endl;
     }
     return 0;
 }

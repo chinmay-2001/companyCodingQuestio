@@ -1,5 +1,3 @@
-// https://docs.google.com/document/d/1sdC79EQT1WJindKKfyaHEB6plr-PePeC9lz23Xav6lk/edit
-
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -55,25 +53,31 @@ typedef unsigned long long int  uint64;
 int main()
 {
     int tc;
-    cin>>tc ;
+    cin>>tc;
+
     while(tc--){
         int n;
         cin>>n;
-        vector<int> nums(n);
-        for(int i=0;i<n;i++)cin>>nums[i];
-        vector<vector<int>> dp(n+1,vector<int>(3,0));
-        dp[0][1]=nums[0];
-        dp[0][2]=1e9;
-        dp[1][1]=1e9;
-        dp[1][2]=nums[0]+nums[2]+nums[1];
-
-        for(int i=2;i<n-1;i++){
-            dp[i][1]=nums[i]+min(dp[i-2][1],dp[i-2][2]);
-            dp[i][2]=nums[i]+nums[i+1]+dp[i-1][1];
+        vi a(n);
+        f(i,0,n)cin>>a[i];
+        int cnt=0;
+        int next=a[n-1];
+        for(int i=n-2;i>=0;i--){
+            if(a[i]>next){
+                int c=a[i];
+                if(next%c==0){
+                    cnt++;
+                    next=c;
+                }else{
+                    int part=ceil((double)c/next);
+                    cnt++;
+                    next=c/part;
+                }
+            }else{
+                next=a[i];
+            }
         }
-        dp[n-1][1]=nums[n-1]+min(dp[n-3][1],dp[n-3][2]);
-        dp[n-1][2]=1e9;
-        cout<<min(dp[n-1][1],min(dp[n-2][1],dp[n-2][2]))<<endl;
+        cout<<cnt<<endl;
     }
     return 0;
 }

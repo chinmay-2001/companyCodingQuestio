@@ -1,5 +1,3 @@
-// https://docs.google.com/document/d/1sdC79EQT1WJindKKfyaHEB6plr-PePeC9lz23Xav6lk/edit
-
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -55,25 +53,39 @@ typedef unsigned long long int  uint64;
 int main()
 {
     int tc;
-    cin>>tc ;
-    while(tc--){
-        int n;
-        cin>>n;
-        vector<int> nums(n);
-        for(int i=0;i<n;i++)cin>>nums[i];
-        vector<vector<int>> dp(n+1,vector<int>(3,0));
-        dp[0][1]=nums[0];
-        dp[0][2]=1e9;
-        dp[1][1]=1e9;
-        dp[1][2]=nums[0]+nums[2]+nums[1];
+    cin>>tc;
 
-        for(int i=2;i<n-1;i++){
-            dp[i][1]=nums[i]+min(dp[i-2][1],dp[i-2][2]);
-            dp[i][2]=nums[i]+nums[i+1]+dp[i-1][1];
+    while(tc--){
+        int n,maxp,r;
+        cin>>n>>maxp>>r;
+        vector<pair<int,int>> pa;
+        for(int i=0;i<n;i++){
+            int t,b;
+            cin>>t>>b;
+            pair<int,int> p=make_pair(t,b);
+            pa.push_back(p);
         }
-        dp[n-1][1]=nums[n-1]+min(dp[n-3][1],dp[n-3][2]);
-        dp[n-1][2]=1e9;
-        cout<<min(dp[n-1][1],min(dp[n-2][1],dp[n-2][2]))<<endl;
+        sort(pa.begin(),pa.end());
+        int ct=pa[0].first;
+        int pac=pa[0].second;
+        int d=0;
+        if(pac>maxp){
+            d+=(pac-maxp);
+            pac=maxp;
+        }
+        for(int i=1;i<n;i++){
+            int t=pa[i].first;
+            int cpac=pa[i].second;
+            int dt=t-ct;
+            int lost=r*dt;
+            pac=pac-lost+cpac;
+            if(pac>maxp){
+                d+=(pac-maxp);
+                pac=maxp;
+            }   
+            ct=t;
+        }
+        cout<<d<<endl;
     }
     return 0;
 }

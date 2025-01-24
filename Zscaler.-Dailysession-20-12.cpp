@@ -1,4 +1,5 @@
-// https://docs.google.com/document/d/1sdC79EQT1WJindKKfyaHEB6plr-PePeC9lz23Xav6lk/edit
+
+// https://docs.google.com/document/d/1k0mOvFj-PT6LvbUjTrw9O-u7lHAMrAUMu2vE7VLp5F0/edit?tab=t.0
 
 #include <bits/stdc++.h>
 using namespace std;
@@ -55,25 +56,26 @@ typedef unsigned long long int  uint64;
 int main()
 {
     int tc;
-    cin>>tc ;
-    while(tc--){
-        int n;
-        cin>>n;
-        vector<int> nums(n);
-        for(int i=0;i<n;i++)cin>>nums[i];
-        vector<vector<int>> dp(n+1,vector<int>(3,0));
-        dp[0][1]=nums[0];
-        dp[0][2]=1e9;
-        dp[1][1]=1e9;
-        dp[1][2]=nums[0]+nums[2]+nums[1];
+    cin>>tc;
 
-        for(int i=2;i<n-1;i++){
-            dp[i][1]=nums[i]+min(dp[i-2][1],dp[i-2][2]);
-            dp[i][2]=nums[i]+nums[i+1]+dp[i-1][1];
-        }
-        dp[n-1][1]=nums[n-1]+min(dp[n-3][1],dp[n-3][2]);
-        dp[n-1][2]=1e9;
-        cout<<min(dp[n-1][1],min(dp[n-2][1],dp[n-2][2]))<<endl;
+    while(tc--){
+       int n;
+       cin>>n;
+       map<int,int> ma;
+       for(int i=0;i<n;i++){
+         int el;
+         cin>>el;
+         ma[el]++;
+       }
+        int cnt=0;
+       while(ma.size()>=2){
+         int first=ma.rbegin()->first;
+         int second=(++ma.rbegin())->first;
+         cnt+=ma[first];
+         ma[second]+=ma[first];
+         ma.erase(first);
+       }
+       cout<<cnt<<endl;
     }
     return 0;
 }

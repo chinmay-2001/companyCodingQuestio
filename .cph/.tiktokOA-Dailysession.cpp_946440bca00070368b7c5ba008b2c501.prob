@@ -1,0 +1,1 @@
+{"name":"Local: tiktokOA-Dailysession","url":"c:\\Users\\Chinm\\OneDrive\\Desktop\\CodingQuestion\\tiktokOA-Dailysession.cpp","tests":[{"id":1735024412446,"input":"2\n2 3\n2 2","output":"170\n124"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"c:\\Users\\Chinm\\OneDrive\\Desktop\\CodingQuestion\\tiktokOA-Dailysession.cpp","group":"local","local":true}

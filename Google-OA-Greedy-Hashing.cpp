@@ -1,5 +1,4 @@
-// https://docs.google.com/document/d/1sdC79EQT1WJindKKfyaHEB6plr-PePeC9lz23Xav6lk/edit
-
+// link:- https://docs.google.com/document/d/13MKczzXCMLXRmytm4Yk_EwXXQCqz_nUewR7GdHNiQO8/edit?tab=t.0
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -55,25 +54,30 @@ typedef unsigned long long int  uint64;
 int main()
 {
     int tc;
-    cin>>tc ;
+    cin>>tc;
+    cin.ignore();
     while(tc--){
-        int n;
-        cin>>n;
-        vector<int> nums(n);
-        for(int i=0;i<n;i++)cin>>nums[i];
-        vector<vector<int>> dp(n+1,vector<int>(3,0));
-        dp[0][1]=nums[0];
-        dp[0][2]=1e9;
-        dp[1][1]=1e9;
-        dp[1][2]=nums[0]+nums[2]+nums[1];
-
-        for(int i=2;i<n-1;i++){
-            dp[i][1]=nums[i]+min(dp[i-2][1],dp[i-2][2]);
-            dp[i][2]=nums[i]+nums[i+1]+dp[i-1][1];
+        string s;
+        cin>>s;
+        int n=s.length();
+        vector<int>  pre(n);
+        vector<int>  suf(n);
+        pre[0]=s[0]=='1';
+        for(int i=1;i<n;i++){
+            pre[i]=pre[i-1]+(s[i]=='1');
         }
-        dp[n-1][1]=nums[n-1]+min(dp[n-3][1],dp[n-3][2]);
-        dp[n-1][2]=1e9;
-        cout<<min(dp[n-1][1],min(dp[n-2][1],dp[n-2][2]))<<endl;
+        suf[n-1]=s[n-1]=='0';
+        for(int i=n-2;i>=0;i--){
+            suf[i]=suf[i+1]+(s[i]=='0');
+        }
+
+        int ans=min(pre[n-1],suf[0]);
+        // cout<<ans<<endl;
+        for(int i=0;i<n-1;i++){
+            ans=min(ans,pre[i]+suf[i+1]);
+        }
+        cout<<ans<<endl;
+
     }
     return 0;
 }

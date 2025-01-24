@@ -114,7 +114,6 @@ int main()
             if(t==1){
                 cout<<query(1,0,n-1,l-1,r-1)<<endl;
             }else if(t==2){  //update
-                
                 update(1,l-1,r,0,n-1);
             }
         }

@@ -1,5 +1,3 @@
-// https://docs.google.com/document/d/1sdC79EQT1WJindKKfyaHEB6plr-PePeC9lz23Xav6lk/edit
-
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -48,32 +46,74 @@ typedef unsigned long int uint32;
 typedef long long int int64;
 typedef unsigned long long int  uint64;
 
-
 /* clang-format on */
 
 /* Main()  function */
 int main()
 {
     int tc;
-    cin>>tc ;
-    while(tc--){
-        int n;
-        cin>>n;
-        vector<int> nums(n);
-        for(int i=0;i<n;i++)cin>>nums[i];
-        vector<vector<int>> dp(n+1,vector<int>(3,0));
-        dp[0][1]=nums[0];
-        dp[0][2]=1e9;
-        dp[1][1]=1e9;
-        dp[1][2]=nums[0]+nums[2]+nums[1];
+    cin >> tc;
 
-        for(int i=2;i<n-1;i++){
-            dp[i][1]=nums[i]+min(dp[i-2][1],dp[i-2][2]);
-            dp[i][2]=nums[i]+nums[i+1]+dp[i-1][1];
+    while (tc--)
+    {
+        int n;
+        cin >> n;
+        vi a(n);
+        vi b(n);
+        f(i, 0, n) cin >> a[i];
+        f(i, 0, n) cin >> b[i];
+
+        vi dpa_even(n + 1, 0);
+        vi dpa_odd(n + 1, 0);
+        vi dpb_odd(n + 1, 0);
+        vi dpb_even(n + 1, 0);
+
+        if (a[0] % 2 == 0)
+        {
+            dpa_even[1] = 1;
         }
-        dp[n-1][1]=nums[n-1]+min(dp[n-3][1],dp[n-3][2]);
-        dp[n-1][2]=1e9;
-        cout<<min(dp[n-1][1],min(dp[n-2][1],dp[n-2][2]))<<endl;
+        else
+        {
+            dpa_odd[1] = 1;
+        }
+
+        if (b[0] % 2 == 0)
+        {
+            dpb_even[1] = 1;
+        }
+        else
+        {
+            dpb_odd[1] = 1;
+        }
+
+        for (int i = 2; i <= n; i++)
+        {
+            int numa = a[i - 1];
+            int numb = b[i - 1];
+            if (numa % 2 == 0)
+            {
+                dpa_even[i] = dpa_even[i - 1] + dpb_even[i - 1];
+                dpa_odd[i] = dpa_odd[i - 1] + dpb_odd[i - 1];
+            }
+            else
+            {
+                dpa_even[i] = dpa_odd[i - 1] + dpb_odd[i - 1];
+                dpa_odd[i] = dpa_even[i - 1] + dpb_even[i - 1];
+            }
+
+            if (numb % 2 == 0)
+            {
+                dpb_even[i] = dpa_even[i - 1] + dpb_even[i - 1];
+                dpb_odd[i] = dpa_odd[i - 1] + dpb_odd[i - 1];
+            }
+            else
+            {
+                dpb_even[i] = dpa_odd[i - 1] + dpb_odd[i - 1];
+                dpb_odd[i] = dpa_even[i - 1] + dpb_even[i - 1];
+            }
+        }
+
+        cout << "even:" << dpa_even[n] + dpb_even[n] << " odd:" << dpa_odd[n] + dpb_odd[n] << endl;
     }
     return 0;
 }

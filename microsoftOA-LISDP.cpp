@@ -1,5 +1,3 @@
-// https://docs.google.com/document/d/1sdC79EQT1WJindKKfyaHEB6plr-PePeC9lz23Xav6lk/edit
-
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -48,32 +46,64 @@ typedef unsigned long int uint32;
 typedef long long int int64;
 typedef unsigned long long int  uint64;
 
-
 /* clang-format on */
 
 /* Main()  function */
 int main()
 {
     int tc;
-    cin>>tc ;
-    while(tc--){
-        int n;
-        cin>>n;
-        vector<int> nums(n);
-        for(int i=0;i<n;i++)cin>>nums[i];
-        vector<vector<int>> dp(n+1,vector<int>(3,0));
-        dp[0][1]=nums[0];
-        dp[0][2]=1e9;
-        dp[1][1]=1e9;
-        dp[1][2]=nums[0]+nums[2]+nums[1];
+    cin >> tc;
 
-        for(int i=2;i<n-1;i++){
-            dp[i][1]=nums[i]+min(dp[i-2][1],dp[i-2][2]);
-            dp[i][2]=nums[i]+nums[i+1]+dp[i-1][1];
+    while (tc--)
+    {
+        int n;
+        cin >> n;
+        vi v(n);
+        int maxi = 0;
+        int mini = INT_MAX;
+        unordered_map<int, int> ma;
+        for (int i = 0; i < n; i++)
+        {
+            cin >> v[i];
+            maxi = max(maxi, v[i]);
+            mini = min(mini, v[i]);
         }
-        dp[n-1][1]=nums[n-1]+min(dp[n-3][1],dp[n-3][2]);
-        dp[n-1][2]=1e9;
-        cout<<min(dp[n-1][1],min(dp[n-2][1],dp[n-2][2]))<<endl;
+        sort(v.begin(), v.end());
+        int diff = maxi - mini;
+        vector<vector<int>> dp(n + 1, vector<int>(101, 1));
+
+        int ans = 1;
+
+        // for (int i = 2; i <= n; i++)
+        // {
+        //     int k = i - 1;
+        //     while (k >= 1)
+        //     {
+        //         int d = v[i - 1] - v[k - 1];
+        //         dp[i][d] = max(dp[i][d], 1 + dp[k][d]);
+        //         ans = max(ans, dp[i][d]);
+        //         k--;
+        //     }
+        // }
+        ma[v[0]] = 1;
+        for (int i = 2; i <= n; i++)
+        {
+            int j = 0;
+            int val = v[i - 1];
+            while (j <= 100)
+            {
+                if (ma.find(val - j) != ma.end())
+                {
+                    int idx = ma[val - j];
+                    dp[i][j] = max(dp[i][j], 1 + dp[idx][j]);
+                    ans = max(ans, dp[i][j]);
+                }
+                j++;
+            }
+            ma[val] = i;
+        }
+
+        cout << ans << endl;
     }
     return 0;
 }

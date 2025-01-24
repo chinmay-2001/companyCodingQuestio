@@ -1,5 +1,3 @@
-// https://docs.google.com/document/d/1sdC79EQT1WJindKKfyaHEB6plr-PePeC9lz23Xav6lk/edit
-
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -48,32 +46,44 @@ typedef unsigned long int uint32;
 typedef long long int int64;
 typedef unsigned long long int  uint64;
 
-
 /* clang-format on */
 
 /* Main()  function */
 int main()
 {
     int tc;
-    cin>>tc ;
-    while(tc--){
-        int n;
-        cin>>n;
-        vector<int> nums(n);
-        for(int i=0;i<n;i++)cin>>nums[i];
-        vector<vector<int>> dp(n+1,vector<int>(3,0));
-        dp[0][1]=nums[0];
-        dp[0][2]=1e9;
-        dp[1][1]=1e9;
-        dp[1][2]=nums[0]+nums[2]+nums[1];
+    cin >> tc;
 
-        for(int i=2;i<n-1;i++){
-            dp[i][1]=nums[i]+min(dp[i-2][1],dp[i-2][2]);
-            dp[i][2]=nums[i]+nums[i+1]+dp[i-1][1];
+    while (tc--)
+    {
+
+        int n;
+        cin >> n;
+        vi a(n);
+        vi b(n);
+        vi c(n);
+        f(i, 0, n) cin >> a[i];
+        f(i, 0, n) cin >> b[i];
+        f(i, 0, n) cin >> c[i];
+
+        vector<int> dpa(n + 1);
+        vector<int> dpb(n + 1);
+        vector<int> dpc(n + 1);
+
+        dpa[1] = a[0];
+        dpb[1] = b[0];
+        dpc[1] = c[0];
+        dpa[2] = a[1] + max(dpa[1], dpb[1], dpc[1]);
+        dpb[2] = b[1] + max(dpa[1], dpb[1], dpc[1]);
+        dpc[2] = c[1] + max(dpa[1], dpb[1], dpc[1]);
+
+        for (int i = 3; i < n; i++)
+        {
+            dpa[i] = max(a[i - 1] + max(dpb[i - 1], dpc[i - 1]), a[i - 1] + a[i - 1], max(dpb[i - 2], dpc[i - 2]));
+            dpb[i] = max(b[i - 1] + max(dpa[i - 1], dpc[i - 1]), b[i - 1] + b[i - 1], max(dpa[i - 2], dpc[i - 2]));
+            dpc[i] = max(c[i - 1] + max(dpb[i - 1], dpa[i - 1]), c[i - 1] + c[i - 1], max(dpa[i - 2], dpb[i - 2]));
         }
-        dp[n-1][1]=nums[n-1]+min(dp[n-3][1],dp[n-3][2]);
-        dp[n-1][2]=1e9;
-        cout<<min(dp[n-1][1],min(dp[n-2][1],dp[n-2][2]))<<endl;
+        cout << max(dpa[n], max(dpb[n], dpc[n])) << endl;
     }
     return 0;
 }

@@ -53,31 +53,35 @@ typedef unsigned long long int  uint64;
 int main()
 {
     int tc;
-    cin>>tc;
+    cin>>tc ;
 
     while(tc--){
-        int n;
-        cin>>n;
-        vi a(n);
-        vi b(n);
-        f(i,0,n)cin>>a[i];
-        f(i,0,n)cin>>b[i];
-
-        int dp[n+1][3];
-        dp[0][1]=0;
-        dp[0][2]=0;
-        dp[1][1]=a[0];
-        dp[1][2]=b[0];
-        string s1="A";
-        string s2="B";
-        
-        for(int i=2;i<=n;i++){
-            dp[i][1]=max(a[i-1]+dp[i-1][1],a[i-1]+dp[i-2][2]);
-            dp[i][2]=max(b[i-1]+dp[i-1][2],b[i-1]+dp[i-2][1]);
+        string s;
+        cin>>s;
+        int len = n.length();
+        // find palindromic subsequence
+        vector<vector<int>> dp(len,vector<int>(len,0));
+        for(int i=0;i<len;i++){
+            dp[i][i]=1;
         }
-        // cout<<dp[n][1]<<" "<<dp[n][2]<<endl;
-        // cout<<s<<endl;
-        cout<<max(dp[n][1],dp[n][2])<<endl;
+        for(int i=0;i<n-1;i++){
+            if(s[i]==s[i+1]){
+                dp[i][i+1]=3;
+            }else{
+                dp[i][i+1]=2;
+            }
+        }
+
+        for(int len=3;len<=n;len++){
+            for(int i=0;i<n-len+1;i++){
+                int j=i+len-1;
+                if(s[i]==s[j]){
+                    dp[i][j]=dp[i+1][j]+dp[i][j-1]+1;
+                }else{
+                    dp[i][j]=dp[i+1][j]+dp[i][j-1]-dp[i+1][j-1];
+                }
+            }
+        }
     }
     return 0;
 }

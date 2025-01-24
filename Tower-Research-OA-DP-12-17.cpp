@@ -56,50 +56,42 @@ int main()
     cin>>tc;
 
     while(tc--){
-        int q;
-        cin>>q;
-        int ans=1;
-        cin.ignore();
-        vector<string>que(q); 
-        f(i,0,q){
-            cin>>que[i];
-        }
-        int maxdp[q+1];
-        fill(maxdp,maxdp+q,INT_MIN);
-        int mindp[q+1];
-        fill(mindp,mindp+q,INT_MAX);
-        maxdp[0]=1;
-        mindp[0]=maxdp[0];
-        int op,num;
-        
-        for(int i=1;i<=q;i++){
-            string s=que[i-1];
-            if(s=="N"){
-                maxdp[i]=max(maxdp[i-1],max(-1*maxdp[i-1],-1*mindp[i-1]));
-                mindp[i]=min(mindp[i-1],min(-1*mindp[i-1],-1*maxdp[i-1]));
-            }else{
-                op=s[0];
-                num=stoi(s.substr(1));
-               
-                if(op=='*'){
-                    maxdp[i]=max(maxdp[i-1],num*maxdp[i-1]);
-                    mindp[i]=min(mindp[i-1],num*mindp[i-1]);
-                }
-                if(op=='+'){
-                    maxdp[i]=max(maxdp[i-1],num+maxdp[i-1]);
-                    mindp[i]=min(mindp[i-1],num+mindp[i-1]);
-                }
-                if(op=='/'){
-                    maxdp[i]=max(maxdp[i-1],maxdp[i-1]/num);
-                    mindp[i]=min(mindp[i-1],mindp[i-1]/num);
-                }
-                if(op=='-'){
-                    maxdp[i]=max(maxdp[i-1],maxdp[i-1]-num);
-                    mindp[i]=min(mindp[i-1],mindp[i-1]-num);
-                }
+        int n;
+        cin>>n;     
+       
+        vi a(n+1);
+        f(i,0,n)cin>>a[i];
+
+        // vi dp(n+1,0);
+        // dp[0]=0;
+        // dp[1]=1;
+        // for(int i=2;i<=n;i++){
+        //     dp[i]=dp[i-1];
+        //     if(a[i-2]==2){
+        //         dp[i]+=dp[i-2];
+        //     }
+        // }
+        // cout<<dp[n]<<endl;
+
+
+
+        vector<vector<int>> dp(n+1,vector<int>(2,0));
+        dp[1][0]=1;
+        dp[2][0]=1;
+        for(int i=3;i<=n;i++){
+            dp[i][0]=dp[i-1][0];
+            if(a[i-2]==2){
+                dp[i][0]+=dp[i-2][0];
+            }
+            dp[i][1]=dp[i-1][1];
+            if(a[i-2]==2){
+                dp[i][1]+=dp[i-2][1];
+            }
+            if(i-3>=0 and a[i-3]==2 and a[i-2]==2){
+                dp[i][1]+=dp[i-3][0];
             }
         }
-        cout<<maxdp[q]<<endl;
+        cout<<dp[n][1]+dp[n][0]<<endl;
     }
     return 0;
 }

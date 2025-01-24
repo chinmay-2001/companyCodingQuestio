@@ -1,5 +1,3 @@
-// https://docs.google.com/document/d/1sdC79EQT1WJindKKfyaHEB6plr-PePeC9lz23Xav6lk/edit
-
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -55,25 +53,50 @@ typedef unsigned long long int  uint64;
 int main()
 {
     int tc;
-    cin>>tc ;
+    cin>>tc;
+
     while(tc--){
         int n;
         cin>>n;
-        vector<int> nums(n);
-        for(int i=0;i<n;i++)cin>>nums[i];
+        vi h(n);
+        f(i,0,n)cin>>h[i];
+        
         vector<vector<int>> dp(n+1,vector<int>(3,0));
-        dp[0][1]=nums[0];
-        dp[0][2]=1e9;
-        dp[1][1]=1e9;
-        dp[1][2]=nums[0]+nums[2]+nums[1];
-
-        for(int i=2;i<n-1;i++){
-            dp[i][1]=nums[i]+min(dp[i-2][1],dp[i-2][2]);
-            dp[i][2]=nums[i]+nums[i+1]+dp[i-1][1];
+        vector<int> p1(n+1);
+        vector<int> p2(n+1);
+        dp[0][1]=0;
+        dp[1][0]=h[0];
+        p1[1]=0;
+        p2[2]=0;
+        if(n>1){
+            dp[2][1]=h[0]+h[1];
+            p1[2]=max(p1[1],dp[2][1]);
+            p2[2]=max(p2[1],dp[2][2]);
         }
-        dp[n-1][1]=nums[n-1]+min(dp[n-3][1],dp[n-3][2]);
-        dp[n-1][2]=1e9;
-        cout<<min(dp[n-1][1],min(dp[n-2][1],dp[n-2][2]))<<endl;
+        if(n>2){
+            dp[3][2]=h[0]+h[1]+h[2];
+            dp[3][1]=max(h[0]+h[1],h[1]+h[2]);
+            p1[3]=max(dp[3][1],p1[3]);
+            p2[3]=max(dp[3][2],p2[3]);
+        }
+
+        for(int i=4;i<=n;i++){
+            // dp[i][1]=h[i-1]+h[i-2]+max(dp[i-3][1],max(dp[i-4][2],dp[i-4][1]));
+
+            dp[i][1]=h[i-1]+h[i-2]+ max(p1[i-3],max(p2[i-3],p1[i-4]));
+            dp[i][2]=h[i-1]+h[i-2]+h[i-3];
+            // if(i-5>=0)dp[i][2]=max(dp[i][2],dp[i][2]+max(dp[i-5][2],dp[i-5][1]));
+            if(i-5>=0)dp[i][2]=max(dp[i][2],dp[i][2]+max(p2[i-5],p1[i-5]));
+            p1[i]=max(p1[i-1],dp[i][1]);
+            p2[i]=max(p2[i-1],dp[i][2]);
+        }
+        if(n==1){
+            cout<<max(dp[n][1],dp[n][2])<<endl;  
+        }else if(n==2){
+            cout<<max(dp[n][1],max(dp[n][2],max(dp[n-1][1],dp[n-1][2])))<<endl;
+        }else{
+            cout<<max(dp[n][1],max(dp[n][2],max(dp[n-1][1],max(dp[n-1][2],max(dp[n-2][1],dp[n-2][2])))))<<endl;
+        }
     }
     return 0;
 }

@@ -48,56 +48,81 @@ typedef unsigned long long int  uint64;
 
 
 /* clang-format on */
+int lef=-1,righ=-1;
+int countmex(vector<int> nums,int i){
+    int cnt=0;
+    //how to get no of mex
+    int n=nums.size();
+    if(i==1){
+        int idx=find(nums.begin(),nums.end(),i)-nums.begin();
+        int l=idx;
+        int r=n-idx-1;
+        cout<<l<<" "<<r<<endl;
+        
+        return (l*(l+1)/2) + (r*(r+1)/2);
+    }else{
+        int idx=find(nums.begin(),nums.end(),i-1)-nums.begin();
+        int cidx=find(nums.begin(),nums.end(),i)-nums.begin();
+        if(lef==-1  and righ==-1){
+            lef=idx;
+            righ=idx;
+        }else{
+            if(idx<lef)lef=idx;
+            if(idx>righ)righ=idx;
+        }
+        cout<<"cidx:"<<cidx<<" idx:"<<idx<<endl;
+        cout<<lef<<" "<<righ<<endl;
+        
+
+        if(cidx>lef  and cidx<righ)return 0;
+
+        int x,y;
+        if(cidx<lef){
+            x=lef-cidx-1;
+            y=n-righ-1;
+        }
+        if(cidx>righ){
+            x=lef;
+            y=cidx-righ-1;
+        }
+
+        cout<<"x:"<<x<<" y:"<<y<<endl;
+        int cnt=x*y+x+y+1;
+        cout<<"int:"<<cnt<<endl;
+        return cnt;
+    }
+}
 
 /* Main()  function */
 int main()
 {
     int tc;
-    cin>>tc;
+    cin>>tc ;
 
     while(tc--){
-        int n;
-        cin>>n;
-        vi a(n);
-        vi b(n);
-        f(i,0,n)cin>>a[i];
-        f(i,0,n)cin>>b[i];
-        int dp[n+1][3][3];
-        // dp[0][1]=0;
-        // dp[0][2]=0;
-        dp[1][1][1]=a[0];
-        dp[1][1][2]=a[0];
-        dp[1][2][1]=b[0];
-        dp[1][2][2]=b[0];
-
-
+        int n,k;
+        cin>>n>>k;
+        vector<int> nums(n);
+        f(i,0,n)cin>>nums[i];
+        // cout<<n<<k<<endl;
         
-        // dp[2][1]=max(dp[1][1]+a[1],dp[1][2]+a[1]);
-        // dp[2][2]=max(dp[1][2]+b[1],dp[1][1]+a[1]);
-        // for(int i=3;i<=n;i++){
-            // dp[i][1]=
-            //         max(dp[i-1][2]+a[i-1],
-            //         max(dp[i-2][2]+a[i-1]+a[i-2],dp[i-2][2]+b[i-2]+a[i-1]));
-            // dp[i][2]=
-            //         max(dp[i-1][1]+b[i-1],
-            //         max(dp[i-2][1]+b[i-1]+b[i-2],dp[i-2][1]+a[i-2]+b[i-1]));
-        // }
-
-        for(int i=2;i<=n;i++){
-            dp[i][1][1]=max(dp[i-2][2][1]+a[i-1]+a[i-2],dp[i-2][2][1]+a[i-1]+a[i-2]);
-
-            dp[i][1][2]=max(dp[i-2][1][1]+a[i-1]+b[i-2],
-                        max(dp[i-2][1][2]+a[i-1]+b[i-2],dp[i-2][2][1]+a[i-1]+b[i-2]));
-
-            dp[i][2][1]=max(dp[i-2][1][2]+b[i-1]+a[i-2],
-                            max(dp[i-2][2][2]+b[i-2]+a[i-1],dp[i-2][2][1]+b[i-1]+a[i-1]));
-            
-            dp[i][2][2]=b[i-1]+b[i-2]+max(dp[i-2][1][2],dp[i-2][1][1]);
+        int cnt=0;
+        int tsubarray=(n*(n+1)/2);
+        if(tsubarray>=k){
+            cout<<n+1<<endl;
+            continue;
         }
-
-        cout<<max(dp[n][1][1],
-        max(dp[n][2][2],
-        max(dp[n][2][1],dp[n][1][2])))<<endl;
+        int ans=-1;
+        for(int i=1;i<=n;i++){
+            // cout<<i<<endl;
+            cnt+=countmex(nums,i);
+            cout<<"cnt:"<<cnt<<endl;
+            if(cnt>=k){
+                ans=i;
+                break;
+            }
+        }
+        cout<<ans<<endl;
     }
     return 0;
 }

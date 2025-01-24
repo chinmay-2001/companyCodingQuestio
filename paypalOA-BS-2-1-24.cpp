@@ -1,5 +1,3 @@
-// https://docs.google.com/document/d/1sdC79EQT1WJindKKfyaHEB6plr-PePeC9lz23Xav6lk/edit
-
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -50,30 +48,78 @@ typedef unsigned long long int  uint64;
 
 
 /* clang-format on */
+int check(int mid,int m,int k,int n){
+    int rem=m-mid;
+    int ps=true;
+    int l=0,h=0;
+    int temp=mid;
+    for(int i=k-1;i>0;i--){
+        if(temp==1){
+            l+=temp;
+        }else{
+            l+=(--temp);
+        }
+    };
 
+    temp=mid;
+
+    for(int i=n;i>k;i--){
+        if(temp==1){
+            l+=temp;
+        }else{
+            l+=(--temp);
+        }
+    }
+
+    //////
+    temp=mid;
+    for(int i=k-1;i>0;i--){
+        h+=(++temp);
+    };
+
+    temp=mid;
+
+    for(int i=n;i>k;i--){
+        h+=(++temp);
+    }
+
+    l+=mid;
+    h+=mid;
+    // cout<<l<<" "<<h<<" mid:"<<mid<<endl;
+    
+
+
+    
+    if(m>=l and m<=h)return 1;
+    else if( m<l)return 2;
+    else if(m>h)return 3;
+    return ps;
+}
 /* Main()  function */
 int main()
 {
     int tc;
-    cin>>tc ;
-    while(tc--){
-        int n;
-        cin>>n;
-        vector<int> nums(n);
-        for(int i=0;i<n;i++)cin>>nums[i];
-        vector<vector<int>> dp(n+1,vector<int>(3,0));
-        dp[0][1]=nums[0];
-        dp[0][2]=1e9;
-        dp[1][1]=1e9;
-        dp[1][2]=nums[0]+nums[2]+nums[1];
+    cin>>tc;
 
-        for(int i=2;i<n-1;i++){
-            dp[i][1]=nums[i]+min(dp[i-2][1],dp[i-2][2]);
-            dp[i][2]=nums[i]+nums[i+1]+dp[i-1][1];
+    while(tc--){
+        int n,m,k;
+        cin>>n>>m>>k;
+        int left=1,right=m,ans=-1;
+        // cout<<"h"<<endl;
+        while(left<=right){
+            int mid=(left+right)/2;
+            // cout<<mid<<endl;
+            int pos=check(mid,m,k,n);
+            if(pos==1){
+                ans=mid;
+                left=mid+1;
+            }else if(pos==2){
+                right=mid-1;
+            }else if( pos==3){
+                left=mid+1;
+            }
         }
-        dp[n-1][1]=nums[n-1]+min(dp[n-3][1],dp[n-3][2]);
-        dp[n-1][2]=1e9;
-        cout<<min(dp[n-1][1],min(dp[n-2][1],dp[n-2][2]))<<endl;
+        cout<<ans<<endl;
     }
     return 0;
 }

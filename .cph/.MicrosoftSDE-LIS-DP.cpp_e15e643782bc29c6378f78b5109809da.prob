@@ -1,0 +1,1 @@
+{"name":"Local: MicrosoftSDE-LIS-DP","url":"c:\\Users\\Chinm\\OneDrive\\Desktop\\CodingQuestion\\MicrosoftSDE-LIS-DP.cpp","tests":[{"id":1737460463848,"input":"1\n6\nRR GR RG GR GR RR","output":"5"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"c:\\Users\\Chinm\\OneDrive\\Desktop\\CodingQuestion\\MicrosoftSDE-LIS-DP.cpp","group":"local","local":true}

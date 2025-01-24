@@ -56,48 +56,73 @@ int main()
     cin>>tc;
 
     while(tc--){
-        int n,k;
-        cin>>n>>k;
-        vi nums(n);
-        for(int i=0;i<n;i++){
-            cin>>nums[i];           
-        }
-        // map<int,int> values;
-        // map<pair<int,int>,int> pa;
-        // int cnt=0;
-        // for(int i=0;i<n;i++){
-        //     int num=nums[i];
-        //     values[num]=1;
-        //     int b=k+num;
-        //     int a=num-k;
-        //     if(values.find(b)!=values.end()){
-        //         if(pa.find(make_pair(num,b))==pa.end()){
-        //             cnt++;
-        //             pa[make_pair(num,b)]=1;
-        //             pa[make_pair(b,num)]=1;
-        //         }
-        //     }
-        //     if(values.find(a)!=values.end()){
-        //         if(pa.find(make_pair(a,num))==pa.end()){
-        //             cnt++;
-        //             pa[make_pair(a,num)]=1;
-        //             pa[make_pair(num,a)]=1;
+        int len,diff;
+        cin>>len>>diff;
+
+        vector<vector<int>> dp(len+1,vector<int>(26,0));   
+
+        // --------------Find the number of strings of length “n” such that -> each adjacent pair has diff <=k-------------------
+
+        // for(int c='a';c<='z';c++){
+        //     dp[1][c-'a']=1;
+        // }
+        // for(int i=2;i<=len;i++){
+        //     for(int c='a';c<='z';c++){
+        //         for(int k='a';k<='z';k++){
+        //             if(abs(c-k)<=diff){
+        //                 dp[i][c-'a']+=dp[i-1][k-'a'];
+        //             }
         //         }
         //     }
         // }
-        map<int,int> ma;
-        for(auto p:nums){
-            ma[p]++;
-        }
-        int cnt=0;
-        for(auto p:ma){
-            int req=p.first+k;
-            if(ma.find(req)!=ma.end()){
-                cnt++;   
+        
+        // int ans=0;
+        // for(int i=0;i<26;i++){
+        //     ans+=dp[len][i];
+        // }
+        // cout<<ans<<endl;
+
+        //----------------Optimization. 1 :-> Prefix Sum Dp--------------
+
+        vector<int> prefix(26);
+        for(int c='a';c<='z';c++){
+            dp[1][c-'a']=1;
+            if(c=='a'){
+                prefix[c-'a']=dp[1][c-'a'];
+            }
+            else{
+                prefix[c-'a']=prefix[c-'a'-1]+dp[1][c-'a'];
             }
         }
 
-        cout<<cnt<<endl;
+        
+
+        for(int i=2;i<=len;i++){
+            for(int c='a';c<='z';c++){
+                int left=max(0,c-'a'-diff);
+                int right=min(25,c-'a'+diff);
+                if(left==0){
+                    dp[i][c-'a']=prefix[right];
+                }else{
+                    dp[i][c-'a']=(prefix[right]-prefix[left-1]);
+                }
+            }
+
+            for(int c='a';c<='z';c++){
+                if(c=='a'){
+                    prefix[c-'a']=dp[i][c-'a'];
+                }else{
+                    prefix[c-'a']=prefix[c-'a'-1]+dp[i][c-'a'];
+                }
+            }
+        }
+
+
+        int ans=0;
+        for(int i=0;i<26;i++){
+            ans+=dp[len][i];
+        }
+        cout<<ans<<endl;
     }
     return 0;
 }

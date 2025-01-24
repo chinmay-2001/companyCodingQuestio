@@ -1,5 +1,3 @@
-// https://docs.google.com/document/d/1sdC79EQT1WJindKKfyaHEB6plr-PePeC9lz23Xav6lk/edit
-
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -51,29 +49,79 @@ typedef unsigned long long int  uint64;
 
 /* clang-format on */
 
+int segnode[100000000];
+vector<int> temp(200005,0);
+
+void build(int node,int start,int end){
+    if(start==end){
+        segnode[node]=0;
+        
+    }else{
+        int mid=(start+end)/2;
+        build(2*node,start,mid);
+        build(2*node+1,mid+1,end);
+        segnode[node]=segnode[2*node] + segnode[2*node+1];
+    }
+}
+
+int query(int node,int start,int end,int l, int r){
+    // cout<<node<<endl;
+    if(start>r || end<l)return 0;
+
+    if(start>=l and end<=r)return segnode[node];
+
+    int mid=(start+end)/2;
+
+    int left=query(2*node,start,mid,l,r);
+    int right=query(2*node+1,mid+1,end,l,r);
+    return left+right;
+}
+
+int update(int node,int start,int end,int idx,int val){
+    if(start==end){
+        segnode[node]=val;
+        temp[start]=val;
+    }else{
+        int mid=(start+end)/2;
+        
+        if(mid<idx){
+            update(2*node+1,mid+1,end,idx,val);
+        }else{
+            update(2*node,start,mid,idx,val);
+        }
+
+        segnode[node]=segnode[2*node]+segnode[2*node+1];
+    }
+
+}
+
 /* Main()  function */
 int main()
 {
     int tc;
-    cin>>tc ;
+    cin>>tc;
+
     while(tc--){
         int n;
         cin>>n;
-        vector<int> nums(n);
-        for(int i=0;i<n;i++)cin>>nums[i];
-        vector<vector<int>> dp(n+1,vector<int>(3,0));
-        dp[0][1]=nums[0];
-        dp[0][2]=1e9;
-        dp[1][1]=1e9;
-        dp[1][2]=nums[0]+nums[2]+nums[1];
 
-        for(int i=2;i<n-1;i++){
-            dp[i][1]=nums[i]+min(dp[i-2][1],dp[i-2][2]);
-            dp[i][2]=nums[i]+nums[i+1]+dp[i-1][1];
+        int c,d;
+        cin>>c>>d;
+        vi a(n);       
+        vi b(n);       
+
+        f(i,0,n)cin>>a[i];
+        f(i,0,n)cin>>b[i];
+
+        build(1,0,200004);
+        int count=0;
+        for(int i=0;i<n;i++){
+            int diff=a[i]-b[i]+(d-c);
+            count+=query(1,0,200004,0,diff);
+            int y=temp[a[i]-b[i]];
+            update(1,0,200004,a[i]-b[i],y+1);
         }
-        dp[n-1][1]=nums[n-1]+min(dp[n-3][1],dp[n-3][2]);
-        dp[n-1][2]=1e9;
-        cout<<min(dp[n-1][1],min(dp[n-2][1],dp[n-2][2]))<<endl;
+        cout<<count<<endl;
     }
     return 0;
 }

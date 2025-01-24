@@ -1,0 +1,1 @@
+{"name":"Local: vacationAtcoder","url":"c:\\Users\\Chinm\\OneDrive\\Desktop\\CodingQuestion\\vacationAtcoder.cpp","tests":[{"id":1737283419808,"input":"3\n10 40 70\n20 50 80\n30 60 90\n","output":"210"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"c:\\Users\\Chinm\\OneDrive\\Desktop\\CodingQuestion\\vacationAtcoder.cpp","group":"local","local":true}

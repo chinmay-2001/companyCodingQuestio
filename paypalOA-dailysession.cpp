@@ -46,38 +46,47 @@ typedef unsigned long int uint32;
 typedef long long int int64;
 typedef unsigned long long int  uint64;
 
-
 /* clang-format on */
 
 /* Main()  function */
 int main()
 {
     int tc;
-    cin>>tc;
+    cin >> tc;
 
-    while(tc--){
+    while (tc--)
+    {
         int n;
-        cin>>n;
+        cin >> n;
         vi a(n);
-        f(i,0,n)cin>>a[i];
-        int cnt=0;
-        int next=a[n-1];
-        for(int i=n-2;i>=0;i--){
-            if(a[i]>next){
-                int c=a[i];
-                if(next%c==0){
-                    cnt++;
-                    next=c;
-                }else{
-                    int part=ceil((double)c/next);
-                    cnt++;
-                    next=c/part;
+        f(i, 0, n) cin >> a[i];
+        int cnt = 0;
+        int next = a[n - 1];
+        for (int i = n - 2; i >= 0; i--)
+        {
+            if (a[i] > next)
+            {
+                int c = a[i];
+                if (c % next == 0)
+                {
+                    int u = next / c;
+                    cnt += (u - 1);
+                    next = c / u;
                 }
-            }else{
-                next=a[i];
+                else
+                {
+
+                    int part = ceil((double)c / next);
+                    cnt++;
+                    next = c / part;
+                }
+            }
+            else
+            {
+                next = a[i];
             }
         }
-        cout<<cnt<<endl;
+        cout << cnt << endl;
     }
     return 0;
 }

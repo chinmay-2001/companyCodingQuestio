@@ -53,58 +53,77 @@ int main()
 {
     int tc;
     cin >> tc;
-    cin.ignore();
+
     while (tc--)
     {
-        string a, b, c;
-        cin >> a >> b >> c;
+        int n;
+        cin >> n;
 
-        int al = a.length();
-        int bl = b.length();
-        vector<vector<int>> dp(al + 1, vector<int>(bl + 1, 0));
-        dp[0][0] = 0;
-        for (int i = 0; i <= al; i++)
+        vector<int> adj[n];
+        vector<int> deg(n, 0);
+        f(i, 0, n - 1)
         {
-            for (int j = 0; j <= bl; j++)
-            {
-                int a1 = 0, b1 = 0;
-                if (i > 0 and a[i - 1] == c[i + j - 1])
-                {
-                    dp[i][j] = max(dp[i][j], 1 + dp[i - 1][j]);
-                    a1 = 1;
-                }
-                else if (i > 0)
-                {
-                    dp[i][j] = max(dp[i][j], dp[i - 1][j]);
-                }
-                if (j > 0 and b[j - 1] == c[i + j - 1])
-                {
-                    dp[i][j] = max(dp[i][j], 1 + dp[i][j - 1]);
-                    b1 = 1;
-                }
-                else if (j > 0)
-                {
-                    dp[i][j] = max(dp[i][j], dp[i][j - 1]);
-                }
+            int u, v;
+            cin >> u >> v;
+            u--;
+            v--;
+            deg[u]++;
+            deg[v]++;
+            adj[u].push_back(v);
+            adj[v].push_back(u);
+        }
 
-                if (a1 == 0 and b1 == 0)
+        // int mans = 0;
+        int ans = 0;
+        vector<int> sdeg = deg;
+
+        sort(sdeg.begin(), sdeg.end());
+
+        for (int i = 0; i < n; i++)
+        {
+            int dig = deg[i];
+
+            vector<int> ideg;
+            for (auto v : adj[i])
+            {
+                ideg.push_back(deg[v]);
+            }
+            ideg.push_back(deg[i]);
+
+            sort(ideg.rbegin(), ideg.rend());
+            vector<int> rem;
+
+            for (int v : ideg)
+            {
+                if (!sdeg.empty() and v == sdeg.back())
                 {
-                    if (i > 0 and j <= 0)
-                    {
-                        dp[i][j] = dp[i - 1][j];
-                    }
-                    else if (j > 0 and i <= 0)
-                    {
-                        dp[i][j] = dp[i][j - 1];
-                    }
-                    else if (i > 0 and j > 0)
-                    {
-                        dp[i][j] = max(dp[i][j - 1], dp[i - 1][j]);
-                    }
+                    rem.push_back(v);
+                    sdeg.pop_back();
                 }
             }
+
+            int mx = -1;
+            if (!sdeg.empty())
+            {
+                mx = max(sdeg.back(), mx);
+            }
+
+            for (auto v : adj[i])
+            {
+                mx = max(mx, deg[v] - 1);
+            }
+
+            // cout << mx << " " << dig << endl;
+            ans = max(ans, dig + mx - 1);
+
+            reverse(rem.begin(), rem.end());
+            for (auto p : rem)
+            {
+                sdeg.push_back(p);
+            }
         }
-        cout << al + bl - dp[al][bl] << endl;
+        cout << ans << endl;
+        // cout << "-----------------------------------------" << endl;
     }
     return 0;
 }

@@ -48,63 +48,113 @@ typedef unsigned long long int  uint64;
 
 /* clang-format on */
 
+int query(int l, int r)
+{
+    cout << "? " << l << " " << r << endl;
+    int ans;
+    cin >> ans;
+    return ans;
+}
+
 /* Main()  function */
 int main()
 {
+    // ios::sync_with_stdio(false);
+    // cin.tie(nullptr);
+    // cout.tie(nullptr);
     int tc;
     cin >> tc;
-    cin.ignore();
+
     while (tc--)
     {
-        string a, b, c;
-        cin >> a >> b >> c;
+        int n;
+        cin >> n;
 
-        int al = a.length();
-        int bl = b.length();
-        vector<vector<int>> dp(al + 1, vector<int>(bl + 1, 0));
-        dp[0][0] = 0;
-        for (int i = 0; i <= al; i++)
+        int i = 1, j = n;
+        string ans(n, 0);
+        int que = query(i, j);
+        i++;
+        if (que == 0)
         {
-            for (int j = 0; j <= bl; j++)
-            {
-                int a1 = 0, b1 = 0;
-                if (i > 0 and a[i - 1] == c[i + j - 1])
-                {
-                    dp[i][j] = max(dp[i][j], 1 + dp[i - 1][j]);
-                    a1 = 1;
-                }
-                else if (i > 0)
-                {
-                    dp[i][j] = max(dp[i][j], dp[i - 1][j]);
-                }
-                if (j > 0 and b[j - 1] == c[i + j - 1])
-                {
-                    dp[i][j] = max(dp[i][j], 1 + dp[i][j - 1]);
-                    b1 = 1;
-                }
-                else if (j > 0)
-                {
-                    dp[i][j] = max(dp[i][j], dp[i][j - 1]);
-                }
-
-                if (a1 == 0 and b1 == 0)
-                {
-                    if (i > 0 and j <= 0)
-                    {
-                        dp[i][j] = dp[i - 1][j];
-                    }
-                    else if (j > 0 and i <= 0)
-                    {
-                        dp[i][j] = dp[i][j - 1];
-                    }
-                    else if (i > 0 and j > 0)
-                    {
-                        dp[i][j] = max(dp[i][j - 1], dp[i - 1][j]);
-                    }
-                }
-            }
+            cout << "! IMPOSSIBLE" << endl;
         }
-        cout << al + bl - dp[al][bl] << endl;
+        else
+        {
+            while (i < j)
+            {
+                int nans = query(i, j);
+                if (nans == que)
+                {
+                    ans[i] = '1';
+                }
+                else if (nans > 0)
+                {
+                    ans[i] = '0';
+                    que = nans;
+                }
+                else if (nans == 0)
+                {
+                    break;
+                }
+                i++;
+            }
+
+            i--;
+            int prev = query(i, j);
+            j--;
+            while (i < j)
+            {
+                int nans = query(i, j);
+                if (nans == prev)
+                {
+                    ans[j] == '0';
+                }
+                else if (nans < prev)
+                {
+                    ans[j] == '1';
+                }
+                j--;
+            }
+            cout << ans << endl;
+        }
+
+        // for (int i = 1; i < n; i++)
+        // {
+        //     ans[i] = query(1, i + 1);
+        // }
+
+        // if (ans == vector<int>(n, 0ll))
+        // {
+        //     cout << "! IMPOSSIBLE" << endl;
+        // }
+        // else
+        // {
+
+        //     int i = 0;
+        //     while (ans[i] == 0)
+        //     {
+        //         i++;
+        //     }
+        //     string s(n, '0');
+
+        //     for (int j = 0; j < i - ans[i]; j++)
+        //     {
+        //         s[j] = '1';
+        //     }
+
+        //     for (int j = i; j < n; j++)
+        //     {
+        //         if (ans[j] > ans[j - 1])
+        //         {
+        //             s[j] = '1';
+        //         }
+        //         else
+        //         {
+        //             s[j] = '0';
+        //         }
+        //     }
+        //     cout << "! " << s << endl;
+        // }
     }
     return 0;
 }

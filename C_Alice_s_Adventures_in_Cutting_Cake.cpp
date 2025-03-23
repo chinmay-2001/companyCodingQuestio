@@ -51,60 +51,68 @@ typedef unsigned long long int  uint64;
 /* Main()  function */
 int main()
 {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
     int tc;
     cin >> tc;
-    cin.ignore();
+
     while (tc--)
     {
-        string a, b, c;
-        cin >> a >> b >> c;
+        int n, m, v;
+        cin >> n >> m >> v;
+        vi a(n);
+        vector<ll> pre(n + 1, 0);
+        f(i, 0, n) cin >> a[i], pre[i + 1] = (pre[i] + (ll)a[i]);
 
-        int al = a.length();
-        int bl = b.length();
-        vector<vector<int>> dp(al + 1, vector<int>(bl + 1, 0));
-        dp[0][0] = 0;
-        for (int i = 0; i <= al; i++)
+        vi p(m + 1, 1e9);
+        vi s(m + 1, -1e9);
+        p[0] = -1;
+        s[0] = n;
+        ll sum = 0;
+        int par = 0;
+        for (int i = 0; i <= n; i++)
         {
-            for (int j = 0; j <= bl; j++)
+            sum += a[i];
+            if (sum >= v)
             {
-                int a1 = 0, b1 = 0;
-                if (i > 0 and a[i - 1] == c[i + j - 1])
-                {
-                    dp[i][j] = max(dp[i][j], 1 + dp[i - 1][j]);
-                    a1 = 1;
-                }
-                else if (i > 0)
-                {
-                    dp[i][j] = max(dp[i][j], dp[i - 1][j]);
-                }
-                if (j > 0 and b[j - 1] == c[i + j - 1])
-                {
-                    dp[i][j] = max(dp[i][j], 1 + dp[i][j - 1]);
-                    b1 = 1;
-                }
-                else if (j > 0)
-                {
-                    dp[i][j] = max(dp[i][j], dp[i][j - 1]);
-                }
+                par++;
+                p[par] = i;
+                sum = 0;
+            }
+            if (par == m)
+                break;
+        }
 
-                if (a1 == 0 and b1 == 0)
-                {
-                    if (i > 0 and j <= 0)
-                    {
-                        dp[i][j] = dp[i - 1][j];
-                    }
-                    else if (j > 0 and i <= 0)
-                    {
-                        dp[i][j] = dp[i][j - 1];
-                    }
-                    else if (i > 0 and j > 0)
-                    {
-                        dp[i][j] = max(dp[i][j - 1], dp[i - 1][j]);
-                    }
-                }
+        sum = 0;
+        par = 0;
+
+        for (int i = n - 1; i >= 0; i--)
+        {
+            sum += a[i];
+            if (sum >= v)
+            {
+                par++;
+                s[par] = i;
+                sum = 0;
+            }
+            if (par == m)
+                break;
+        }
+
+        ll maxi = -1;
+
+        for (int i = 0; i <= m; i++)
+        {
+            int x = i, y = m - i;
+
+            int l = p[x], r = s[y];
+            if (l < r)
+            {
+                maxi = max(maxi, (ll)(pre[r] - pre[l + 1]));
             }
         }
-        cout << al + bl - dp[al][bl] << endl;
+        cout << maxi << endl;
     }
     return 0;
 }

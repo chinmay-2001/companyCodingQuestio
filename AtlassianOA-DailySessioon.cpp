@@ -51,60 +51,66 @@ typedef unsigned long long int  uint64;
 /* Main()  function */
 int main()
 {
+
     int tc;
     cin >> tc;
-    cin.ignore();
+
     while (tc--)
     {
-        string a, b, c;
-        cin >> a >> b >> c;
+        int n;
+        cin >> n;
+        vector<int> a(n);
+        vector<int> c(n);
+        set<int> sa;
 
-        int al = a.length();
-        int bl = b.length();
-        vector<vector<int>> dp(al + 1, vector<int>(bl + 1, 0));
-        dp[0][0] = 0;
-        for (int i = 0; i <= al; i++)
+        f(i, 0, n)
         {
-            for (int j = 0; j <= bl; j++)
+            cin >> a[i];
+            sa.insert(a[i]);
+        }
+
+        map<int, vector<int>> ma;
+
+        f(i, 0, n)
+        {
+            cin >> c[i];
+            ma[a[i]].push_back(c[i]);
+        }
+
+        int ans = 0;
+        int prev = -1;
+
+        for (auto pair : ma)
+        {
+            int num = pair.first;
+            if (ma[num].size() > 1)
             {
-                int a1 = 0, b1 = 0;
-                if (i > 0 and a[i - 1] == c[i + j - 1])
+                vector<int> vec = pair.second;
+                int maxi = -1;
+                int idx = -1;
+                int sum = 0;
+                for (int i = 0; i < vec.size(); i++)
                 {
-                    dp[i][j] = max(dp[i][j], 1 + dp[i - 1][j]);
-                    a1 = 1;
-                }
-                else if (i > 0)
-                {
-                    dp[i][j] = max(dp[i][j], dp[i - 1][j]);
-                }
-                if (j > 0 and b[j - 1] == c[i + j - 1])
-                {
-                    dp[i][j] = max(dp[i][j], 1 + dp[i][j - 1]);
-                    b1 = 1;
-                }
-                else if (j > 0)
-                {
-                    dp[i][j] = max(dp[i][j], dp[i][j - 1]);
+                    sum += vec[i];
+                    if (vec[i] > maxi)
+                    {
+                        maxi = max(maxi, vec[i]);
+                        idx = i;
+                    }
                 }
 
-                if (a1 == 0 and b1 == 0)
+                ans += (sum - maxi);
+
+                for (int i = 0; i < vec.size(); i++)
                 {
-                    if (i > 0 and j <= 0)
+                    if (i != idx)
                     {
-                        dp[i][j] = dp[i - 1][j];
-                    }
-                    else if (j > 0 and i <= 0)
-                    {
-                        dp[i][j] = dp[i][j - 1];
-                    }
-                    else if (i > 0 and j > 0)
-                    {
-                        dp[i][j] = max(dp[i][j - 1], dp[i - 1][j]);
+                        ma[num + 1].push_back(vec[i]);
                     }
                 }
             }
         }
-        cout << al + bl - dp[al][bl] << endl;
+        cout << ans << endl;
     }
     return 0;
 }

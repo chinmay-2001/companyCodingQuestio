@@ -47,64 +47,74 @@ typedef long long int int64;
 typedef unsigned long long int  uint64;
 
 /* clang-format on */
+void dfs(vector<int> adj[], int node, vector<bool> &vis, vector<int> &nodeValue, vector<int> &w, vector<int> &parent)
+{
+    for (auto v : adj[node])
+    {
+        if (vis[v] == false)
+        {
+            parent[v] = node;
+            vis[v] = true;
+            dfs(adj, v, vis, nodeValue, w, parent);
+        }
+    }
 
+    for (auto v : adj[node])
+    {
+        if (parent[node] != v)
+        {
+            w[node] = max(w[v], w[node]);
+        }
+    }
+    // cout << w[node] << " " << "node:" << node << endl;
+    if (w[node] == INT_MIN)
+    {
+        w[node] = nodeValue[node];
+    }
+    else
+    {
+        w[node] = w[node] + nodeValue[node];
+    }
+}
 /* Main()  function */
 int main()
 {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
     int tc;
     cin >> tc;
-    cin.ignore();
+
     while (tc--)
     {
-        string a, b, c;
-        cin >> a >> b >> c;
-
-        int al = a.length();
-        int bl = b.length();
-        vector<vector<int>> dp(al + 1, vector<int>(bl + 1, 0));
-        dp[0][0] = 0;
-        for (int i = 0; i <= al; i++)
+        int n;
+        cin >> n;
+        vector<int> adj[n];
+        for (int i = 0; i < n - 1; i++)
         {
-            for (int j = 0; j <= bl; j++)
-            {
-                int a1 = 0, b1 = 0;
-                if (i > 0 and a[i - 1] == c[i + j - 1])
-                {
-                    dp[i][j] = max(dp[i][j], 1 + dp[i - 1][j]);
-                    a1 = 1;
-                }
-                else if (i > 0)
-                {
-                    dp[i][j] = max(dp[i][j], dp[i - 1][j]);
-                }
-                if (j > 0 and b[j - 1] == c[i + j - 1])
-                {
-                    dp[i][j] = max(dp[i][j], 1 + dp[i][j - 1]);
-                    b1 = 1;
-                }
-                else if (j > 0)
-                {
-                    dp[i][j] = max(dp[i][j], dp[i][j - 1]);
-                }
-
-                if (a1 == 0 and b1 == 0)
-                {
-                    if (i > 0 and j <= 0)
-                    {
-                        dp[i][j] = dp[i - 1][j];
-                    }
-                    else if (j > 0 and i <= 0)
-                    {
-                        dp[i][j] = dp[i][j - 1];
-                    }
-                    else if (i > 0 and j > 0)
-                    {
-                        dp[i][j] = max(dp[i][j - 1], dp[i - 1][j]);
-                    }
-                }
-            }
+            int x, y;
+            cin >> x >> y;
+            adj[x].push_back(y);
+            adj[y].push_back(x);
         }
-        cout << al + bl - dp[al][bl] << endl;
+        vector<int> nodeValue(n);
+
+        for (int i = 0; i < n; i++)
+        {
+            cin >> nodeValue[i];
+        }
+
+        vector<bool> vis(n, false);
+        vector<int> w(n + 1, INT_MIN);
+        vector<int> parent(n + 1, 0);
+        vis[0] = true;
+        dfs(adj, 0, vis, nodeValue, w, parent);
+
+        for (auto v : w)
+        {
+            cout << v << " ";
+        }
+        cout << endl;
     }
     return 0;
 }

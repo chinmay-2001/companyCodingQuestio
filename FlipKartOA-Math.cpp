@@ -53,58 +53,57 @@ int main()
 {
     int tc;
     cin >> tc;
-    cin.ignore();
+
     while (tc--)
     {
-        string a, b, c;
-        cin >> a >> b >> c;
+        int n;
+        cin >> n;
+        int sum = (n * (n + 1)) / 2;
+        int tar = sum / 2;
 
-        int al = a.length();
-        int bl = b.length();
-        vector<vector<int>> dp(al + 1, vector<int>(bl + 1, 0));
-        dp[0][0] = 0;
-        for (int i = 0; i <= al; i++)
+        map<int, int> ma;
+        sum = 0;
+        int last = 0;
+        for (int i = 1; i <= n; i++)
         {
-            for (int j = 0; j <= bl; j++)
+            sum += i;
+            ma[i] = 1;
+            last = i;
+            if (sum > tar)
             {
-                int a1 = 0, b1 = 0;
-                if (i > 0 and a[i - 1] == c[i + j - 1])
-                {
-                    dp[i][j] = max(dp[i][j], 1 + dp[i - 1][j]);
-                    a1 = 1;
-                }
-                else if (i > 0)
-                {
-                    dp[i][j] = max(dp[i][j], dp[i - 1][j]);
-                }
-                if (j > 0 and b[j - 1] == c[i + j - 1])
-                {
-                    dp[i][j] = max(dp[i][j], 1 + dp[i][j - 1]);
-                    b1 = 1;
-                }
-                else if (j > 0)
-                {
-                    dp[i][j] = max(dp[i][j], dp[i][j - 1]);
-                }
-
-                if (a1 == 0 and b1 == 0)
-                {
-                    if (i > 0 and j <= 0)
-                    {
-                        dp[i][j] = dp[i - 1][j];
-                    }
-                    else if (j > 0 and i <= 0)
-                    {
-                        dp[i][j] = dp[i][j - 1];
-                    }
-                    else if (i > 0 and j > 0)
-                    {
-                        dp[i][j] = max(dp[i][j - 1], dp[i - 1][j]);
-                    }
-                }
+                break;
             }
         }
-        cout << al + bl - dp[al][bl] << endl;
+
+        sum += n;
+        sum -= last;
+        int diff = sum - tar;
+
+        ma[n] = 1;
+        ma[last] = 0;
+        ma[diff] = 0;
+        vector<int> ans;
+        for (auto p : ma)
+        {
+            if (p.second == 1)
+            {
+                ans.push_back(p.first);
+            }
+        }
+
+        for (int i = 1; i <= n; i++)
+        {
+            if (ma[i] == 0)
+            {
+                ans.push_back(i);
+            }
+        }
+
+        for (auto p : ans)
+        {
+            cout << p << " ";
+        }
+        cout << endl;
     }
     return 0;
 }

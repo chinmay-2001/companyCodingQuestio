@@ -53,58 +53,73 @@ int main()
 {
     int tc;
     cin >> tc;
-    cin.ignore();
+
     while (tc--)
     {
-        string a, b, c;
-        cin >> a >> b >> c;
+        int n, k;
+        cin >> n >> k;
+        vi v(n);
+        vi check(25);
+        f(i, 0, n) cin >> v[i];
 
-        int al = a.length();
-        int bl = b.length();
-        vector<vector<int>> dp(al + 1, vector<int>(bl + 1, 0));
+        vector<vector<int>> dp(n + 1, vector<int>(k + 1, 0));
         dp[0][0] = 0;
-        for (int i = 0; i <= al; i++)
-        {
-            for (int j = 0; j <= bl; j++)
-            {
-                int a1 = 0, b1 = 0;
-                if (i > 0 and a[i - 1] == c[i + j - 1])
-                {
-                    dp[i][j] = max(dp[i][j], 1 + dp[i - 1][j]);
-                    a1 = 1;
-                }
-                else if (i > 0)
-                {
-                    dp[i][j] = max(dp[i][j], dp[i - 1][j]);
-                }
-                if (j > 0 and b[j - 1] == c[i + j - 1])
-                {
-                    dp[i][j] = max(dp[i][j], 1 + dp[i][j - 1]);
-                    b1 = 1;
-                }
-                else if (j > 0)
-                {
-                    dp[i][j] = max(dp[i][j], dp[i][j - 1]);
-                }
+        dp[1][1] = v[0];
+        int OR = v[0];
 
-                if (a1 == 0 and b1 == 0)
+        for (int i = 18; i <= 0; i--)
+        {
+            int k = v[0] >> i;
+            if (k & 1)
+            {
+                check[25] = 1;
+            }
+        }
+
+        for (int i = 2; i <= n; i++)
+        {
+            dp[i][1] = (v[i - 1] | OR);
+
+            vi pre(i + 4, 0);
+
+            for (int j = i; j >= 1; j--)
+            {
+                pre[j] = pre[j + 1] | v[j - 1];
+            }
+
+            for (int m = 2; m <= k; m++)
+            {
+                // int j = i;
+                // int xr = 0;
+                // while (j > 0)
+                // {
+                //     int num = v[j - 1];
+                //     xr = num | xr;
+                //     dp[i][m] = max(xr + dp[j - 1][m - 1], dp[i][m]);
+                //     j--;
+                // }
+                int maxi = 0;
+                for (int c = 18; c >= 0; c--)
                 {
-                    if (i > 0 and j <= 0)
+                    int idx = check[c];
+                    if (idx >= m)
                     {
-                        dp[i][j] = dp[i - 1][j];
+                        maxi = max(dp[idx - 1][m - 1] + pre[idx], maxi);
                     }
-                    else if (j > 0 and i <= 0)
-                    {
-                        dp[i][j] = dp[i][j - 1];
-                    }
-                    else if (i > 0 and j > 0)
-                    {
-                        dp[i][j] = max(dp[i][j - 1], dp[i - 1][j]);
-                    }
+                }
+                dp[i][m] = maxi;
+            }
+
+            for (int p = 18; p >= 0; p--)
+            {
+                int k = v[i - 1] >> p;
+                if (k & 1)
+                {
+                    check[p] = i;
                 }
             }
         }
-        cout << al + bl - dp[al][bl] << endl;
+        cout << dp[n][k] << endl;
     }
     return 0;
 }

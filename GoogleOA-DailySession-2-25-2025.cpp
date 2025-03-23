@@ -46,65 +46,79 @@ typedef unsigned long int uint32;
 typedef long long int int64;
 typedef unsigned long long int  uint64;
 
+map<int,int> ma;
 /* clang-format on */
+int factors(int n)
+{
+    for (int i = 1; i <= sqrt(n); i++)
+    {
+        if (n % i == 0)
+        {
+            ma[i]++;
+            ma[n / i]++;
+        }
+    }
+}
+struct DescendingOrder
+{
+    bool operator()(const int &a, const int &b) const
+    {
+        return a > b; // Sort in descending order
+    }
+};
 
 /* Main()  function */
 int main()
 {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
     int tc;
     cin >> tc;
-    cin.ignore();
+
     while (tc--)
     {
-        string a, b, c;
-        cin >> a >> b >> c;
+        int n;
+        cin >> n;
+        vector<int> v(n);
 
-        int al = a.length();
-        int bl = b.length();
-        vector<vector<int>> dp(al + 1, vector<int>(bl + 1, 0));
-        dp[0][0] = 0;
-        for (int i = 0; i <= al; i++)
+        f(i, 0, n)
         {
-            for (int j = 0; j <= bl; j++)
-            {
-                int a1 = 0, b1 = 0;
-                if (i > 0 and a[i - 1] == c[i + j - 1])
-                {
-                    dp[i][j] = max(dp[i][j], 1 + dp[i - 1][j]);
-                    a1 = 1;
-                }
-                else if (i > 0)
-                {
-                    dp[i][j] = max(dp[i][j], dp[i - 1][j]);
-                }
-                if (j > 0 and b[j - 1] == c[i + j - 1])
-                {
-                    dp[i][j] = max(dp[i][j], 1 + dp[i][j - 1]);
-                    b1 = 1;
-                }
-                else if (j > 0)
-                {
-                    dp[i][j] = max(dp[i][j], dp[i][j - 1]);
-                }
+            cin >> v[i];
+            factors(v[i]);
+        }
 
-                if (a1 == 0 and b1 == 0)
-                {
-                    if (i > 0 and j <= 0)
-                    {
-                        dp[i][j] = dp[i - 1][j];
-                    }
-                    else if (j > 0 and i <= 0)
-                    {
-                        dp[i][j] = dp[i][j - 1];
-                    }
-                    else if (i > 0 and j > 0)
-                    {
-                        dp[i][j] = max(dp[i][j - 1], dp[i - 1][j]);
-                    }
-                }
+        multimap<int, int, DescendingOrder> rev;
+
+        for (auto p : ma)
+        {
+            rev.insert({p.second, p.first});
+        }
+
+        int sum = 0;
+
+        vector<int> maxGCD(n + 1, -1);
+        int maxi = INT_MIN;
+        for (auto p : rev)
+        {
+            int freq = p.first;
+            int value = p.second;
+            maxi = max(value, maxi);
+            maxGCD[freq] = max(maxGCD[freq], maxi);
+        }
+
+        for (int i = n - 1; i >= 0; i--)
+        {
+            if (maxGCD[i] == -1)
+            {
+                maxGCD[i] = maxGCD[i + 1];
             }
         }
-        cout << al + bl - dp[al][bl] << endl;
+
+        for (int i = 2; i <= n; i++)
+        {
+            cout << maxGCD[i] << " ";
+        }
     }
     return 0;
 }

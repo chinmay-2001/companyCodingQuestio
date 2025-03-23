@@ -47,64 +47,87 @@ typedef long long int int64;
 typedef unsigned long long int  uint64;
 
 /* clang-format on */
-
+bool check(vector<int> pre, int k, vector<int> v)
+{
+    int n = v.size();
+    int curk = k;
+    for (int i = n; i >= 1; i--)
+    {
+        if (pre[i - 1] >= curk)
+            return true;
+        if (v[i] < curk)
+            curk++;
+        else
+            curk--;
+    }
+    return false;
+}
 /* Main()  function */
 int main()
 {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
     int tc;
     cin >> tc;
-    cin.ignore();
+
     while (tc--)
     {
-        string a, b, c;
-        cin >> a >> b >> c;
+        int n;
+        cin >> n;
 
-        int al = a.length();
-        int bl = b.length();
-        vector<vector<int>> dp(al + 1, vector<int>(bl + 1, 0));
-        dp[0][0] = 0;
-        for (int i = 0; i <= al; i++)
+        vi v(n + 1);
+        for (int i = 1; i <= n; i++)
+            cin >> v[i];
+
+        vi pre(n + 1, 0);
+        int x = 0;
+        for (int i = 1; i <= n; i++)
         {
-            for (int j = 0; j <= bl; j++)
-            {
-                int a1 = 0, b1 = 0;
-                if (i > 0 and a[i - 1] == c[i + j - 1])
-                {
-                    dp[i][j] = max(dp[i][j], 1 + dp[i - 1][j]);
-                    a1 = 1;
-                }
-                else if (i > 0)
-                {
-                    dp[i][j] = max(dp[i][j], dp[i - 1][j]);
-                }
-                if (j > 0 and b[j - 1] == c[i + j - 1])
-                {
-                    dp[i][j] = max(dp[i][j], 1 + dp[i][j - 1]);
-                    b1 = 1;
-                }
-                else if (j > 0)
-                {
-                    dp[i][j] = max(dp[i][j], dp[i][j - 1]);
-                }
-
-                if (a1 == 0 and b1 == 0)
-                {
-                    if (i > 0 and j <= 0)
-                    {
-                        dp[i][j] = dp[i - 1][j];
-                    }
-                    else if (j > 0 and i <= 0)
-                    {
-                        dp[i][j] = dp[i][j - 1];
-                    }
-                    else if (i > 0 and j > 0)
-                    {
-                        dp[i][j] = max(dp[i][j - 1], dp[i - 1][j]);
-                    }
-                }
-            }
+            if (v[i] > x)
+                x++;
+            else if (v[i] < x)
+                x--;
+            pre[i] = max(pre[i - 1], x);
         }
-        cout << al + bl - dp[al][bl] << endl;
+
+        //--------------binary search------------------
+        int l = 0, r = n + 1;
+        int ans = 0;
+        while (l < r)
+        {
+            int mid = (l + r + 1) >> 1;
+            cout << mid << endl;
+            if (check(pre, mid, v))
+            {
+                ans = mid;
+                l = mid;
+            }
+            else
+            {
+                r = mid - 1;
+            }
+
+            cout << "l:" << l << " r:" << r << endl;
+        }
+        cout << l << endl;
+        cout << "---------------" << endl;
+
+        //------------------dp solution ---------------------
+
+        // vector<int> dp(n + 1, 0);
+        // dp[1] = 0;
+        // for (int i = 2; i <= n; i++)
+        // {
+        //     int y = dp[i - 1];
+        //     if (v[i] > y)
+        //         y++;
+        //     else if (v[i] < y)
+        //         y--;
+
+        //     dp[i] = max(y, pre[i - 1]);
+        // }
+        // cout << dp[n] << endl;
     }
     return 0;
 }

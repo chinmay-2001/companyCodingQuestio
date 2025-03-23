@@ -11,7 +11,7 @@ using namespace std;
 #define vll vector<long long>
 #define mii map<int, int>
 #define si set<int>
-#define sc set<char>
+#define sc set<char>  
 
 /* FUNCTIONS */
 #define f(i,s,e) for(long long int i=s;i<e;i++)
@@ -51,60 +51,37 @@ typedef unsigned long long int  uint64;
 /* Main()  function */
 int main()
 {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
     int tc;
     cin >> tc;
-    cin.ignore();
+
     while (tc--)
     {
-        string a, b, c;
-        cin >> a >> b >> c;
+        ll n, k;
+        cin >> n >> k;
+        vll v(n);
+        ll sum = 0;
+        ll maxi = -1;
+        f(i, 0, n) cin >> v[i], sum += v[i], maxi = max(maxi, v[i]);
 
-        int al = a.length();
-        int bl = b.length();
-        vector<vector<int>> dp(al + 1, vector<int>(bl + 1, 0));
-        dp[0][0] = 0;
-        for (int i = 0; i <= al; i++)
+        ll total = sum + k;
+        ll m = n;
+        int f = 0;
+        while (m > 1)
         {
-            for (int j = 0; j <= bl; j++)
+            ll req = total / m;
+            if (req * m >= sum and req >= maxi)
             {
-                int a1 = 0, b1 = 0;
-                if (i > 0 and a[i - 1] == c[i + j - 1])
-                {
-                    dp[i][j] = max(dp[i][j], 1 + dp[i - 1][j]);
-                    a1 = 1;
-                }
-                else if (i > 0)
-                {
-                    dp[i][j] = max(dp[i][j], dp[i - 1][j]);
-                }
-                if (j > 0 and b[j - 1] == c[i + j - 1])
-                {
-                    dp[i][j] = max(dp[i][j], 1 + dp[i][j - 1]);
-                    b1 = 1;
-                }
-                else if (j > 0)
-                {
-                    dp[i][j] = max(dp[i][j], dp[i][j - 1]);
-                }
-
-                if (a1 == 0 and b1 == 0)
-                {
-                    if (i > 0 and j <= 0)
-                    {
-                        dp[i][j] = dp[i - 1][j];
-                    }
-                    else if (j > 0 and i <= 0)
-                    {
-                        dp[i][j] = dp[i][j - 1];
-                    }
-                    else if (i > 0 and j > 0)
-                    {
-                        dp[i][j] = max(dp[i][j - 1], dp[i - 1][j]);
-                    }
-                }
+                cout << m << endl;
+                f = 1;
+                break;
             }
+            m--;
         }
-        cout << al + bl - dp[al][bl] << endl;
+        if (f == 0)
+            cout << 1 << endl;
     }
     return 0;
 }

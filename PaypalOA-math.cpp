@@ -47,64 +47,47 @@ typedef long long int int64;
 typedef unsigned long long int  uint64;
 
 /* clang-format on */
-
+int check(int n, int last)
+{
+    int ans = -1;
+    for (int i = 1; i <= n; i++)
+    {
+        if (n - i <= last and n - i >= i)
+        {
+            ans = n - i;
+        }
+    }
+    return ans;
+}
 /* Main()  function */
 int main()
 {
+
     int tc;
     cin >> tc;
-    cin.ignore();
+
     while (tc--)
     {
-        string a, b, c;
-        cin >> a >> b >> c;
+        int n;
+        cin >> n;
+        vi v(n);
 
-        int al = a.length();
-        int bl = b.length();
-        vector<vector<int>> dp(al + 1, vector<int>(bl + 1, 0));
-        dp[0][0] = 0;
-        for (int i = 0; i <= al; i++)
+        f(i, 0, n) cin >> v[i];
+        int last = v[n - 1];
+        int cnt = 0;
+        for (int i = n - 2; i >= 0; i--)
         {
-            for (int j = 0; j <= bl; j++)
+            if (v[i] > last)
             {
-                int a1 = 0, b1 = 0;
-                if (i > 0 and a[i - 1] == c[i + j - 1])
-                {
-                    dp[i][j] = max(dp[i][j], 1 + dp[i - 1][j]);
-                    a1 = 1;
-                }
-                else if (i > 0)
-                {
-                    dp[i][j] = max(dp[i][j], dp[i - 1][j]);
-                }
-                if (j > 0 and b[j - 1] == c[i + j - 1])
-                {
-                    dp[i][j] = max(dp[i][j], 1 + dp[i][j - 1]);
-                    b1 = 1;
-                }
-                else if (j > 0)
-                {
-                    dp[i][j] = max(dp[i][j], dp[i][j - 1]);
-                }
-
-                if (a1 == 0 and b1 == 0)
-                {
-                    if (i > 0 and j <= 0)
-                    {
-                        dp[i][j] = dp[i - 1][j];
-                    }
-                    else if (j > 0 and i <= 0)
-                    {
-                        dp[i][j] = dp[i][j - 1];
-                    }
-                    else if (i > 0 and j > 0)
-                    {
-                        dp[i][j] = max(dp[i][j - 1], dp[i - 1][j]);
-                    }
-                }
+                last = check(v[i], last);
+                cnt++;
+            }
+            else
+            {
+                last = v[i];
             }
         }
-        cout << al + bl - dp[al][bl] << endl;
+        cout << cnt << endl;
     }
     return 0;
 }

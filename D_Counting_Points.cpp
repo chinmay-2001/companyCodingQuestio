@@ -51,60 +51,42 @@ typedef unsigned long long int  uint64;
 /* Main()  function */
 int main()
 {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
     int tc;
     cin >> tc;
-    cin.ignore();
+
     while (tc--)
     {
-        string a, b, c;
-        cin >> a >> b >> c;
+        int n, m;
+        cin >> n >> m;
+        vi c(n);
+        vi r(n);
+        f(i, 0, n) cin >> c[i];
+        f(i, 0, n) cin >> r[i];
 
-        int al = a.length();
-        int bl = b.length();
-        vector<vector<int>> dp(al + 1, vector<int>(bl + 1, 0));
-        dp[0][0] = 0;
-        for (int i = 0; i <= al; i++)
+        unordered_map<int, int> ma;
+
+        ll ans = 0;
+        for (int i = 0; i < n; i++)
         {
-            for (int j = 0; j <= bl; j++)
+            int x1 = c[i] - r[i];
+            int x2 = c[i] + r[i];
+            int ra = r[i];
+            for (int j = x1; j <= x2; j++)
             {
-                int a1 = 0, b1 = 0;
-                if (i > 0 and a[i - 1] == c[i + j - 1])
-                {
-                    dp[i][j] = max(dp[i][j], 1 + dp[i - 1][j]);
-                    a1 = 1;
-                }
-                else if (i > 0)
-                {
-                    dp[i][j] = max(dp[i][j], dp[i - 1][j]);
-                }
-                if (j > 0 and b[j - 1] == c[i + j - 1])
-                {
-                    dp[i][j] = max(dp[i][j], 1 + dp[i][j - 1]);
-                    b1 = 1;
-                }
-                else if (j > 0)
-                {
-                    dp[i][j] = max(dp[i][j], dp[i][j - 1]);
-                }
-
-                if (a1 == 0 and b1 == 0)
-                {
-                    if (i > 0 and j <= 0)
-                    {
-                        dp[i][j] = dp[i - 1][j];
-                    }
-                    else if (j > 0 and i <= 0)
-                    {
-                        dp[i][j] = dp[i][j - 1];
-                    }
-                    else if (i > 0 and j > 0)
-                    {
-                        dp[i][j] = max(dp[i][j - 1], dp[i - 1][j]);
-                    }
-                }
+                ll y = floor(sqrt(pow(ra, 2) - pow((c[i] - j), 2)));
+                ma[j] = max(ma[j], y);
             }
         }
-        cout << al + bl - dp[al][bl] << endl;
+
+        for (auto p : ma)
+        {
+            ans += (ll)(2 * p.second);
+        }
+
+        cout << ans + ma.size() << endl;
     }
     return 0;
 }

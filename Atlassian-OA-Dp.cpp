@@ -53,58 +53,48 @@ int main()
 {
     int tc;
     cin >> tc;
-    cin.ignore();
+
     while (tc--)
     {
-        string a, b, c;
-        cin >> a >> b >> c;
+        int n;
+        cin >> n;
+        vi a(n);
+        vi b(n);
 
-        int al = a.length();
-        int bl = b.length();
-        vector<vector<int>> dp(al + 1, vector<int>(bl + 1, 0));
-        dp[0][0] = 0;
-        for (int i = 0; i <= al; i++)
+        f(i, 0, n) cin >> a[i];
+        f(i, 0, n) cin >> b[i];
+
+        vector<vector<ll>> dp(n + 1, vector<ll>(51, INT_MAX)); // minimum cost to for largest subset
+
+        dp[1][a[0]] = 0;
+        for (int i = 2; i <= n; i++)
         {
-            for (int j = 0; j <= bl; j++)
+            for (int j = 1; j <= 50; j++)
             {
-                int a1 = 0, b1 = 0;
-                if (i > 0 and a[i - 1] == c[i + j - 1])
+                if (a[i - 1] == j)
                 {
-                    dp[i][j] = max(dp[i][j], 1 + dp[i - 1][j]);
-                    a1 = 1;
-                }
-                else if (i > 0)
-                {
-                    dp[i][j] = max(dp[i][j], dp[i - 1][j]);
-                }
-                if (j > 0 and b[j - 1] == c[i + j - 1])
-                {
-                    dp[i][j] = max(dp[i][j], 1 + dp[i][j - 1]);
-                    b1 = 1;
-                }
-                else if (j > 0)
-                {
-                    dp[i][j] = max(dp[i][j], dp[i][j - 1]);
-                }
-
-                if (a1 == 0 and b1 == 0)
-                {
-                    if (i > 0 and j <= 0)
+                    for (int v = 1; v <= 50; v++)
                     {
-                        dp[i][j] = dp[i - 1][j];
+                        if (abs(a[i - 1] - v) != 1)
+                        {
+                            dp[i][j] = min(dp[i][j], dp[i - 1][v]);
+                        }
                     }
-                    else if (j > 0 and i <= 0)
-                    {
-                        dp[i][j] = dp[i][j - 1];
-                    }
-                    else if (i > 0 and j > 0)
-                    {
-                        dp[i][j] = max(dp[i][j - 1], dp[i - 1][j]);
-                    }
+                }
+                else
+                {
+                    dp[i][j] = min(dp[i][j], b[i - 1] + dp[i - 1][j]);
                 }
             }
         }
-        cout << al + bl - dp[al][bl] << endl;
+
+        int ans = INT_MAX;
+        for (int i = 1; i <= 50; i++)
+        {
+            ans = min(dp[n][i], ans);
+        }
+
+        cout << ans << endl;
     }
     return 0;
 }

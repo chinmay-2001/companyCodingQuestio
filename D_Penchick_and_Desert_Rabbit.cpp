@@ -46,32 +46,34 @@ typedef unsigned long int uint32;
 typedef long long int int64;
 typedef unsigned long long int  uint64;
 
-int segnode[1000005];
-int a[10000];
 /* clang-format on */
-void build(int node, int start, int end)
+vector<int> segnode, lazynode;
+
+/* clang-format on */
+void push_lazy(int node, int start, int end)
 {
-    if (start == end)
+    if (lazynode[node] != 0)
     {
-        segnode[node] = a[start];
-    }
-    else
-    {
-        int mid = (start + end) / 2;
-        build(2 * node, start, mid);
-        build(2 * node + 1, mid + 1, end);
-        segnode[node] = segnode[2 * node] + segnode[2 * node + 1];
+        segnode[node] = max(segnode[node], lazynode[node]);
+
+        if (start != end)
+        {
+            lazynode[2 * node] = max(lazynode[2 * node], lazynode[node]);
+            lazynode[2 * node + 1] = max(lazynode[2 * node + 1], lazynode[node]);
+        }
+        lazynode[node] = 0;
     }
 }
 
 int query(int node, int start, int end, int l, int r)
 {
+    push_lazy(node, start, end);
     if (end < l || start > r)
     {
         return 0;
     }
 
-    if (l <= start and r >= end)
+    if (l <= start and end <= r)
     {
         return segnode[node];
     }
@@ -80,35 +82,44 @@ int query(int node, int start, int end, int l, int r)
 
     int left = query(2 * node, start, mid, l, r);
     int right = query(2 * node + 1, mid + 1, end, l, r);
-    return left + right;
+    return max(left, right);
 }
 
-int update(int node, int idx, int val, int start, int end)
+void update(int node, int l, int r, int val, int start, int end)
 {
-    if (start == end)
+    push_lazy(node, start, end);
+    if (start > r || l > end)
     {
-        segnode[node] = val;
-        a[idx] = val;
+        return;
     }
-    else
-    {
-        int mid = (start + end) / 2;
-        if (idx <= mid)
-        {
-            update(2 * node, idx, val, start, mid);
-        }
-        else
-        {
-            update(2 * node + 1, idx, val, mid + 1, end);
-        }
 
-        segnode[node] = segnode[2 * node] + segnode[2 * node + 1];
+    if (l <= start and end <= r)
+    {
+        segnode[node] = max(val, segnode[node]);
+        if (start != end)
+        {
+            lazynode[2 * node] = max(val, lazynode[2 * node]);
+            lazynode[2 * node + 1] = max(val, lazynode[2 * node + 1]);
+        }
+        return;
     }
+
+    int mid = (start + end) / 2;
+
+    update(2 * node, l, r, val, start, mid);
+
+    update(2 * node + 1, l, r, val, mid + 1, end);
+
+    segnode[node] = max(segnode[2 * node], segnode[2 * node + 1]);
+    return;
 }
 
 /* Main()  function */
 int main()
 {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
     int tc;
     cin >> tc;
 
@@ -117,25 +128,37 @@ int main()
         int n;
         cin >> n;
 
-        f(i, 0, n) cin >> a[i];
-
-        build(1, 0, n - 1);
-        int q;
-        cin >> q;
-        while (q--)
+        vi v(n);
+        multiset<int> mul;
+        for (int i = 0; i < n; i++)
         {
-            int t, l, r;
-            cin >> t >> l >> r;
-            // query
-            if (t == 1)
+            cin >> v[i];
+            mul.insert(v[i]);
+        }
+
+        segnode.resize(4 * n, 0);
+        lazynode.resize(4 * n, 0);
+        fill(segnode.begin(), segnode.end(), 0);
+        fill(lazynode.begin(), lazynode.end(), 0);
+
+        vi ans(n);
+        for (int i = n - 1; i >= 0; i--)
+        {
+            ans[i] = max({query(1, 0, n - 1, 0, v[i] - 1), *mul.rbegin(), query(1, 0, n - 1, 0, *mul.rbegin() - 1)});
+
+            update(1, v[i], n, ans[i], 0, n - 1);
+
+            auto it = mul.find(v[i]);
+            if (it != mul.end())
             {
-                cout << query(1, 0, n - 1, l - 1, r - 1) << endl;
-            }
-            else if (t == 2)
-            { // update
-                update(1, l - 1, r, 0, n - 1);
+                mul.erase(it);
             }
         }
+
+        for (auto p : ans)
+            cout << p << " ";
+
+        cout << endl;
     }
     return 0;
 }

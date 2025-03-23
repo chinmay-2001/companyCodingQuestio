@@ -48,63 +48,93 @@ typedef unsigned long long int  uint64;
 
 /* clang-format on */
 
+void traversal(vector<int> adj[], int node, vector<int> &subtree, vector<bool> &vis, vector<int> &parent, vector<int> &dp)
+{
+    for (auto v : adj[node])
+    {
+        if (vis[v] == false)
+        {
+            vis[v] = true;
+            parent[v] = node;
+            traversal(adj, v, subtree, vis, parent, dp);
+        }
+    }
+
+    int maxi = 0, sum = 0, maxnode = -1;
+
+    for (auto v : adj[node])
+    {
+        if (parent[node] != v)
+        {
+            sum += subtree[v];
+            if (subtree[v] > maxi)
+            {
+                maxi = subtree[v];
+                maxnode = v;
+            }
+            vis[v] = true;
+            subtree[node] += subtree[v];
+        }
+    }
+
+    if (sum == 0)
+    {
+        subtree[node] = 1;
+        dp[node] = 0;
+        return;
+    }
+
+    if (maxi <= sum / 2)
+    {
+        dp[node] = sum / 2;
+    }
+    else
+    {
+        int rem = sum - maxi;
+        int leftOver = maxi - rem;
+        int finalLeftOver = leftOver - 2 * dp[maxnode];
+
+        if (finalLeftOver >= 0)
+        {
+            dp[node] = (sum - finalLeftOver) / 2;
+        }
+        else
+        {
+            dp[node] = sum / 2;
+        }
+    }
+    subtree[node] += 1;
+}
+
 /* Main()  function */
 int main()
 {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
     int tc;
     cin >> tc;
-    cin.ignore();
+
     while (tc--)
     {
-        string a, b, c;
-        cin >> a >> b >> c;
-
-        int al = a.length();
-        int bl = b.length();
-        vector<vector<int>> dp(al + 1, vector<int>(bl + 1, 0));
-        dp[0][0] = 0;
-        for (int i = 0; i <= al; i++)
+        int n;
+        cin >> n;
+        vector<int> adj[n + 1];
+        for (int i = 0; i < n - 1; i++)
         {
-            for (int j = 0; j <= bl; j++)
-            {
-                int a1 = 0, b1 = 0;
-                if (i > 0 and a[i - 1] == c[i + j - 1])
-                {
-                    dp[i][j] = max(dp[i][j], 1 + dp[i - 1][j]);
-                    a1 = 1;
-                }
-                else if (i > 0)
-                {
-                    dp[i][j] = max(dp[i][j], dp[i - 1][j]);
-                }
-                if (j > 0 and b[j - 1] == c[i + j - 1])
-                {
-                    dp[i][j] = max(dp[i][j], 1 + dp[i][j - 1]);
-                    b1 = 1;
-                }
-                else if (j > 0)
-                {
-                    dp[i][j] = max(dp[i][j], dp[i][j - 1]);
-                }
-
-                if (a1 == 0 and b1 == 0)
-                {
-                    if (i > 0 and j <= 0)
-                    {
-                        dp[i][j] = dp[i - 1][j];
-                    }
-                    else if (j > 0 and i <= 0)
-                    {
-                        dp[i][j] = dp[i][j - 1];
-                    }
-                    else if (i > 0 and j > 0)
-                    {
-                        dp[i][j] = max(dp[i][j - 1], dp[i - 1][j]);
-                    }
-                }
-            }
+            int x, y;
+            cin >> x >> y;
+            adj[x].push_back(y);
+            adj[y].push_back(x);
         }
-        cout << al + bl - dp[al][bl] << endl;
+
+        vector<int> subtree(n + 1, 0);
+        vector<bool> vis(n + 1, false);
+        vector<int> dp(n + 1, 0);
+        vector<int> parent(n + 1, 0);
+        vis[0] = true;
+        traversal(adj, 0, subtree, vis, parent, dp);
+        cout << dp[0] << endl;
     }
     return 0;
 }

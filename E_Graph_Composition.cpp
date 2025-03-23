@@ -48,63 +48,83 @@ typedef unsigned long long int  uint64;
 
 /* clang-format on */
 
+void gdfs(vector<int> a[], vector<int> &vis, int node, int c)
+{
+    // cout << "h" << endl;
+    vis[node] = c;
+    for (int v : a[node])
+    {
+        if (vis[v] == 0)
+        {
+            gdfs(a, vis, v, c);
+        }
+    }
+}
+
+int fdfs(vector<int> a[], vector<int> &va, vector<int> &fb, int node, int c)
+{
+    va[node] = c;
+    int res = 0;
+    for (int v : a[node])
+    {
+        if (va[v] == 0)
+        {
+            if (fb[v] != c)
+                res++;
+            else
+                res += fdfs(a, va, fb, v, c);
+        }
+    }
+    return res;
+}
+
 /* Main()  function */
 int main()
 {
     int tc;
     cin >> tc;
-    cin.ignore();
+
     while (tc--)
     {
-        string a, b, c;
-        cin >> a >> b >> c;
+        int n, m1, m2;
+        cin >> n >> m1 >> m2;
+        vector<int> a1[n];
+        vector<int> a2[n];
 
-        int al = a.length();
-        int bl = b.length();
-        vector<vector<int>> dp(al + 1, vector<int>(bl + 1, 0));
-        dp[0][0] = 0;
-        for (int i = 0; i <= al; i++)
+        for (int i = 0; i < m1; i++)
         {
-            for (int j = 0; j <= bl; j++)
-            {
-                int a1 = 0, b1 = 0;
-                if (i > 0 and a[i - 1] == c[i + j - 1])
-                {
-                    dp[i][j] = max(dp[i][j], 1 + dp[i - 1][j]);
-                    a1 = 1;
-                }
-                else if (i > 0)
-                {
-                    dp[i][j] = max(dp[i][j], dp[i - 1][j]);
-                }
-                if (j > 0 and b[j - 1] == c[i + j - 1])
-                {
-                    dp[i][j] = max(dp[i][j], 1 + dp[i][j - 1]);
-                    b1 = 1;
-                }
-                else if (j > 0)
-                {
-                    dp[i][j] = max(dp[i][j], dp[i][j - 1]);
-                }
+            int u, v;
+            cin >> u >> v;
+            a1[--u].push_back(--v);
+            a1[v].push_back(u);
+        }
 
-                if (a1 == 0 and b1 == 0)
-                {
-                    if (i > 0 and j <= 0)
-                    {
-                        dp[i][j] = dp[i - 1][j];
-                    }
-                    else if (j > 0 and i <= 0)
-                    {
-                        dp[i][j] = dp[i][j - 1];
-                    }
-                    else if (i > 0 and j > 0)
-                    {
-                        dp[i][j] = max(dp[i][j - 1], dp[i - 1][j]);
-                    }
-                }
+        for (int i = 0; i < m2; i++)
+        {
+            int u, v;
+            cin >> u >> v;
+            a2[--u].push_back(--v);
+            a2[v].push_back(u);
+        }
+
+        vector<int> va(n + 1, 0);
+        vector<int> vb(n + 1, 0);
+        int ans = 0;
+        for (int i = 0; i < n; i++)
+        {
+            if (vb[i] == 0)
+            {
+                gdfs(a2, vb, i, i + 1);
+            }
+
+            if (va[i] == 0)
+            {
+                ans += fdfs(a1, va, vb, i, vb[i]);
+                if (i + 1 > vb[i])
+                    ans++;
             }
         }
-        cout << al + bl - dp[al][bl] << endl;
+        cout << ans << endl;
     }
     return 0;
 }

@@ -51,60 +51,95 @@ typedef unsigned long long int  uint64;
 /* Main()  function */
 int main()
 {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
     int tc;
     cin >> tc;
-    cin.ignore();
+
     while (tc--)
     {
-        string a, b, c;
-        cin >> a >> b >> c;
+        int n;
+        cin >> n;
+        vi v(n);
+        f(i, 0, n) cin >> v[i];
+        vector<pair<ll, ll>> ans;
+        set<int> se;
 
-        int al = a.length();
-        int bl = b.length();
-        vector<vector<int>> dp(al + 1, vector<int>(bl + 1, 0));
-        dp[0][0] = 0;
-        for (int i = 0; i <= al; i++)
+        f(i, 0, n)
         {
-            for (int j = 0; j <= bl; j++)
+            if (v[i] == 1)
             {
-                int a1 = 0, b1 = 0;
-                if (i > 0 and a[i - 1] == c[i + j - 1])
-                {
-                    dp[i][j] = max(dp[i][j], 1 + dp[i - 1][j]);
-                    a1 = 1;
-                }
-                else if (i > 0)
-                {
-                    dp[i][j] = max(dp[i][j], dp[i - 1][j]);
-                }
-                if (j > 0 and b[j - 1] == c[i + j - 1])
-                {
-                    dp[i][j] = max(dp[i][j], 1 + dp[i][j - 1]);
-                    b1 = 1;
-                }
-                else if (j > 0)
-                {
-                    dp[i][j] = max(dp[i][j], dp[i][j - 1]);
-                }
-
-                if (a1 == 0 and b1 == 0)
-                {
-                    if (i > 0 and j <= 0)
-                    {
-                        dp[i][j] = dp[i - 1][j];
-                    }
-                    else if (j > 0 and i <= 0)
-                    {
-                        dp[i][j] = dp[i][j - 1];
-                    }
-                    else if (i > 0 and j > 0)
-                    {
-                        dp[i][j] = max(dp[i][j - 1], dp[i - 1][j]);
-                    }
-                }
+                se.insert(i);
             }
         }
-        cout << al + bl - dp[al][bl] << endl;
+
+        int l = 0, r = n - 1;
+        while (l < r)
+        {
+            if (v[l] == 0)
+            {
+                l++;
+                continue;
+            }
+
+            while (r > l and v[r] != 0)
+            {
+                --r;
+            }
+
+            if (r <= l)
+                break;
+
+            if (v[l] == 1)
+            {
+                swap(v[l], v[r]);
+                ans.push_back({l + 1, r + 1});
+                se.erase(l);
+                se.insert(r);
+            }
+            else
+            {
+                int pos1 = *se.rbegin();
+                swap(v[l], v[pos1]);
+                swap(v[l], v[r]);
+
+                ans.push_back({l + 1, pos1 + 1});
+                ans.push_back({l + 1, r + 1});
+
+                se.erase(pos1);
+                se.insert(r);
+            }
+            l++;
+        }
+        r = n - 1;
+
+        while (l < r)
+        {
+            if (v[l] == 1)
+            {
+                l++;
+                continue;
+            }
+
+            while (l < r and v[r] == 2)
+            {
+                --r;
+            }
+            // cout << "l:" << l << " r:" << r << endl;
+            if (l >= r)
+                break;
+
+            swap(v[l], v[r]);
+            ans.push_back({l + 1, r + 1});
+            l++;
+        }
+
+        cout << ans.size() << endl;
+        for (auto p : ans)
+        {
+            cout << p.first << " " << p.second << endl;
+        }
     }
     return 0;
 }

@@ -1,0 +1,1 @@
+{"name":"Local: Atlassian-OA-Dp","url":"c:\\Users\\Chinm\\OneDrive\\Desktop\\CodingQuestion\\Atlassian-OA-Dp.cpp","tests":[{"id":1739027075994,"input":"1\n4\n5 8 9 10\n1 2 5 1","output":"3"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"c:\\Users\\Chinm\\OneDrive\\Desktop\\CodingQuestion\\Atlassian-OA-Dp.cpp","group":"local","local":true}

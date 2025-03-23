@@ -51,60 +51,81 @@ typedef unsigned long long int  uint64;
 /* Main()  function */
 int main()
 {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
     int tc;
     cin >> tc;
-    cin.ignore();
+
     while (tc--)
     {
-        string a, b, c;
-        cin >> a >> b >> c;
+        int n;
+        cin >> n;
+        vi v(n);
+        f(i, 0, n) cin >> v[i];
 
-        int al = a.length();
-        int bl = b.length();
-        vector<vector<int>> dp(al + 1, vector<int>(bl + 1, 0));
-        dp[0][0] = 0;
-        for (int i = 0; i <= al; i++)
+        vi sorted = v;
+        sort(sorted.begin(), sorted.end());
+
+        vi prefix(n);
+        prefix[0] = sorted[0];
+
+        vi np(n, 1);
+        np[0] = 0;
+        for (int i = 1; i < n; i++)
         {
-            for (int j = 0; j <= bl; j++)
+            if (sorted[i] > prefix[i - 1])
             {
-                int a1 = 0, b1 = 0;
-                if (i > 0 and a[i - 1] == c[i + j - 1])
-                {
-                    dp[i][j] = max(dp[i][j], 1 + dp[i - 1][j]);
-                    a1 = 1;
-                }
-                else if (i > 0)
-                {
-                    dp[i][j] = max(dp[i][j], dp[i - 1][j]);
-                }
-                if (j > 0 and b[j - 1] == c[i + j - 1])
-                {
-                    dp[i][j] = max(dp[i][j], 1 + dp[i][j - 1]);
-                    b1 = 1;
-                }
-                else if (j > 0)
-                {
-                    dp[i][j] = max(dp[i][j], dp[i][j - 1]);
-                }
-
-                if (a1 == 0 and b1 == 0)
-                {
-                    if (i > 0 and j <= 0)
-                    {
-                        dp[i][j] = dp[i - 1][j];
-                    }
-                    else if (j > 0 and i <= 0)
-                    {
-                        dp[i][j] = dp[i][j - 1];
-                    }
-                    else if (i > 0 and j > 0)
-                    {
-                        dp[i][j] = max(dp[i][j - 1], dp[i - 1][j]);
-                    }
-                }
+                // cout << sorted[i] << " " << prefix[i - 1] << endl;
+                np[i - 1] = 0;
             }
+            prefix[i] = (prefix[i - 1] + sorted[i]);
         }
-        cout << al + bl - dp[al][bl] << endl;
+
+        // for (auto p : np)
+        //     cout << p << " ";
+        // cout << endl;
+
+        for (int i = n - 2; i >= 0; i--)
+        {
+            np[i] = (np[i + 1] & np[i]);
+        }
+        // for (auto p : np)
+        //     cout << p << " ";
+        // cout << endl;
+
+        for (int i = 0; i < n; i++)
+        {
+            int num = v[i];
+            auto it = upper_bound(sorted.begin(), sorted.end(), num);
+            int idx = it - sorted.begin();
+            // cout << "idx:" << idx << endl;
+            int cursum = prefix[idx - 1];
+
+            int p = 1;
+            if (np[idx - 1] == 1)
+            {
+                cout << i + 1 << " ";
+            }
+            // for (int i = idx; i < n; i++)
+            // {
+            //     int curnum = sorted[i];
+            //     if (cursum < curnum)
+            //     {
+            //         p = 0;
+            //         break;
+            //     }
+            //     else
+            //     {
+            //         cursum += curnum;
+            //     }
+            // }
+
+            // if (p == 1)
+            // {
+            //     cout << i + 1 << " ";
+            // }
+        }
     }
     return 0;
 }

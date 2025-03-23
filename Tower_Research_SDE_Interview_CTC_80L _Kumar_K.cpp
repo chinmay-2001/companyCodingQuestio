@@ -47,64 +47,62 @@ typedef long long int int64;
 typedef unsigned long long int  uint64;
 
 /* clang-format on */
+void convertToBinary(vector<vector<int>> &adj, int val, int idx)
+{
+    int i = 0;
+    while (val > 0)
+    {
+        adj[idx][i] = val % 2;
+        val /= 2;
+        i++;
+    }
+}
 
 /* Main()  function */
 int main()
 {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
     int tc;
     cin >> tc;
-    cin.ignore();
+
     while (tc--)
     {
-        string a, b, c;
-        cin >> a >> b >> c;
-
-        int al = a.length();
-        int bl = b.length();
-        vector<vector<int>> dp(al + 1, vector<int>(bl + 1, 0));
-        dp[0][0] = 0;
-        for (int i = 0; i <= al; i++)
+        int n;
+        cin >> n;
+        vector<int> v(n);
+        vector<vector<int>> adj(n, vector<int>(30, 0));
+        for (int i = 0; i < n; i++)
         {
-            for (int j = 0; j <= bl; j++)
-            {
-                int a1 = 0, b1 = 0;
-                if (i > 0 and a[i - 1] == c[i + j - 1])
-                {
-                    dp[i][j] = max(dp[i][j], 1 + dp[i - 1][j]);
-                    a1 = 1;
-                }
-                else if (i > 0)
-                {
-                    dp[i][j] = max(dp[i][j], dp[i - 1][j]);
-                }
-                if (j > 0 and b[j - 1] == c[i + j - 1])
-                {
-                    dp[i][j] = max(dp[i][j], 1 + dp[i][j - 1]);
-                    b1 = 1;
-                }
-                else if (j > 0)
-                {
-                    dp[i][j] = max(dp[i][j], dp[i][j - 1]);
-                }
-
-                if (a1 == 0 and b1 == 0)
-                {
-                    if (i > 0 and j <= 0)
-                    {
-                        dp[i][j] = dp[i - 1][j];
-                    }
-                    else if (j > 0 and i <= 0)
-                    {
-                        dp[i][j] = dp[i][j - 1];
-                    }
-                    else if (i > 0 and j > 0)
-                    {
-                        dp[i][j] = max(dp[i][j - 1], dp[i - 1][j]);
-                    }
-                }
-            }
+            cin >> v[i];
+            convertToBinary(adj, v[i], i);
         }
-        cout << al + bl - dp[al][bl] << endl;
+
+        int ans = 0;
+        for (int i = 0; i < 30; i++)
+        {
+            int c0 = 0;
+            int c1 = 0;
+            int sum = 0;
+            for (int j = 0; j < n; j++)
+            {
+                if (adj[j][i] == 1)
+                {
+                    int temp = c1;
+                    c1 = c0 + 1;
+                    c0 = temp;
+                }
+                else
+                {
+                    c0 = c0 + 1;
+                    c1 = c1;
+                }
+                sum += c1;
+            }
+            ans += ((1 << i) * sum);
+        }
+        cout << ans << endl;
     }
     return 0;
 }

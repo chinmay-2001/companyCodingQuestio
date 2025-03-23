@@ -1,0 +1,1 @@
+{"name":"Local: AmazonOA","url":"c:\\Users\\Chinm\\OneDrive\\Desktop\\CodingQuestion\\AmazonOA.cpp","tests":[{"id":1741709546092,"input":"1\n5\n1 6 2 7 2","output":"2 4"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"c:\\Users\\Chinm\\OneDrive\\Desktop\\CodingQuestion\\AmazonOA.cpp","group":"local","local":true}

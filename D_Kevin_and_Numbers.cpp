@@ -51,60 +51,93 @@ typedef unsigned long long int  uint64;
 /* Main()  function */
 int main()
 {
+
     int tc;
     cin >> tc;
-    cin.ignore();
+
     while (tc--)
     {
-        string a, b, c;
-        cin >> a >> b >> c;
+        int n, m;
+        cin >> n >> m;
 
-        int al = a.length();
-        int bl = b.length();
-        vector<vector<int>> dp(al + 1, vector<int>(bl + 1, 0));
-        dp[0][0] = 0;
-        for (int i = 0; i <= al; i++)
+        vi a(n);
+        vi b(m);
+
+        priority_queue<int> q1;
+        priority_queue<int> q2;
+        f(i, 0, n)
         {
-            for (int j = 0; j <= bl; j++)
+            cin >> a[i];
+            q1.push(a[i]);
+        }
+        f(i, 0, m)
+        {
+            cin >> b[i];
+            q2.push(b[i]);
+        }
+        int d = n - m;
+        int np = 0;
+        while (!q1.empty() and !q2.empty() and d > 0)
+        {
+            int n1 = q1.top();
+            int n2 = q2.top();
+            if (n1 > n2)
             {
-                int a1 = 0, b1 = 0;
-                if (i > 0 and a[i - 1] == c[i + j - 1])
+                np = 1;
+                break;
+            }
+            else if (n2 > n1)
+            {
+                int x1 = floor((double)n2 / 2);
+                int x2 = ceil((double)n2 / 2);
+                if (x1 == n1)
                 {
-                    dp[i][j] = max(dp[i][j], 1 + dp[i - 1][j]);
-                    a1 = 1;
+                    q1.pop();
+                    q2.pop();
+                    q2.push(x2);
                 }
-                else if (i > 0)
+                else if (x2 == n1)
                 {
-                    dp[i][j] = max(dp[i][j], dp[i - 1][j]);
+                    q1.pop();
+                    q2.pop();
+                    q2.push(x1);
                 }
-                if (j > 0 and b[j - 1] == c[i + j - 1])
+                else
                 {
-                    dp[i][j] = max(dp[i][j], 1 + dp[i][j - 1]);
-                    b1 = 1;
+                    q2.pop();
+                    q2.push(x2);
+                    q2.push(x1);
                 }
-                else if (j > 0)
-                {
-                    dp[i][j] = max(dp[i][j], dp[i][j - 1]);
-                }
-
-                if (a1 == 0 and b1 == 0)
-                {
-                    if (i > 0 and j <= 0)
-                    {
-                        dp[i][j] = dp[i - 1][j];
-                    }
-                    else if (j > 0 and i <= 0)
-                    {
-                        dp[i][j] = dp[i][j - 1];
-                    }
-                    else if (i > 0 and j > 0)
-                    {
-                        dp[i][j] = max(dp[i][j - 1], dp[i - 1][j]);
-                    }
-                }
+                d--;
+            }
+            else
+            {
+                q1.pop();
+                q2.pop();
             }
         }
-        cout << al + bl - dp[al][bl] << endl;
+
+        if (np == 1 and q1.size() != q2.size())
+        {
+            cout << "No" << endl;
+        }
+        else
+        {
+            while (!q1.empty() and !q2.empty())
+            {
+                if (q1.top() != q2.top())
+                {
+                    np = 1;
+                    break;
+                }
+                q1.pop();
+                q2.pop();
+            }
+            if (np == 1 || !q1.empty() || !q2.empty())
+                cout << "No" << endl;
+            else
+                cout << "Yes" << endl;
+        }
     }
     return 0;
 }

@@ -53,58 +53,57 @@ int main()
 {
     int tc;
     cin >> tc;
-    cin.ignore();
+
     while (tc--)
     {
-        string a, b, c;
-        cin >> a >> b >> c;
+        int no, d, z, m, n;
+        cin >> no >> d >> z >> m >> n;
+        vi v(no);
+        f(i, 0, no) cin >> v[i];
 
-        int al = a.length();
-        int bl = b.length();
-        vector<vector<int>> dp(al + 1, vector<int>(bl + 1, 0));
-        dp[0][0] = 0;
-        for (int i = 0; i <= al; i++)
+        vi p1(no);
+        vi p2(no);
+
+        if (v[0] == d)
+            p1[0] = 1;
+        if (v[0] == z)
+            p2[0] = 1;
+
+        for (int i = 1; i < no; i++)
         {
-            for (int j = 0; j <= bl; j++)
-            {
-                int a1 = 0, b1 = 0;
-                if (i > 0 and a[i - 1] == c[i + j - 1])
-                {
-                    dp[i][j] = max(dp[i][j], 1 + dp[i - 1][j]);
-                    a1 = 1;
-                }
-                else if (i > 0)
-                {
-                    dp[i][j] = max(dp[i][j], dp[i - 1][j]);
-                }
-                if (j > 0 and b[j - 1] == c[i + j - 1])
-                {
-                    dp[i][j] = max(dp[i][j], 1 + dp[i][j - 1]);
-                    b1 = 1;
-                }
-                else if (j > 0)
-                {
-                    dp[i][j] = max(dp[i][j], dp[i][j - 1]);
-                }
+            if (v[i] == d)
+                p1[i] = p1[i - 1] + 1;
+            else
+                p1[i] = p1[i - 1];
 
-                if (a1 == 0 and b1 == 0)
-                {
-                    if (i > 0 and j <= 0)
-                    {
-                        dp[i][j] = dp[i - 1][j];
-                    }
-                    else if (j > 0 and i <= 0)
-                    {
-                        dp[i][j] = dp[i][j - 1];
-                    }
-                    else if (i > 0 and j > 0)
-                    {
-                        dp[i][j] = max(dp[i][j - 1], dp[i - 1][j]);
-                    }
-                }
-            }
+            if (v[i] == z)
+                p2[i] = p2[i - 1] + 1;
+            else
+                p2[i] = p2[i - 1];
         }
-        cout << al + bl - dp[al][bl] << endl;
+
+        // so if m/n == c1/c2 then c1*n == c2*m
+        //   c1= p1[j]- p1[i-1] and c2=p2[js]- p2[i-1]
+        //   p1[j]-p1[i-1]/p2[j]-p2[i-1]== m/n;
+        //   n*p1[j]- n* p1[i-1] == m*p2[j]- m*p2[i-1]
+        //   m*p2[i-1] -n*p1[i-1] ==  m*p2[j] -n*p1[j]
+
+        unordered_map<int, int> ma;
+
+        int cnt = 0;
+        ma[0] = 1;
+        for (int i = 0; i < no; i++)
+        {
+            int value = m * p2[i] - n * p1[i];
+            cnt += ma[value];
+            ma[value]++;
+        }
+
+        // We also have to count no of subarray where no of d and z are 0 because it will be counted by this subarray
+
+        cout << cnt << endl;
     }
     return 0;
 }
+
+// how many array will be palidrome if %k is done

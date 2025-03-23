@@ -53,58 +53,63 @@ int main()
 {
     int tc;
     cin >> tc;
-    cin.ignore();
+
     while (tc--)
     {
-        string a, b, c;
-        cin >> a >> b >> c;
-
-        int al = a.length();
-        int bl = b.length();
-        vector<vector<int>> dp(al + 1, vector<int>(bl + 1, 0));
-        dp[0][0] = 0;
-        for (int i = 0; i <= al; i++)
+        int n;
+        cin >> n;
+        vi v(n);
+        f(i, 0, n) cin >> v[i];
+        vi cnt(130, 0);
+        for (int i = 1; i <= 128; i++)
         {
-            for (int j = 0; j <= bl; j++)
-            {
-                int a1 = 0, b1 = 0;
-                if (i > 0 and a[i - 1] == c[i + j - 1])
-                {
-                    dp[i][j] = max(dp[i][j], 1 + dp[i - 1][j]);
-                    a1 = 1;
-                }
-                else if (i > 0)
-                {
-                    dp[i][j] = max(dp[i][j], dp[i - 1][j]);
-                }
-                if (j > 0 and b[j - 1] == c[i + j - 1])
-                {
-                    dp[i][j] = max(dp[i][j], 1 + dp[i][j - 1]);
-                    b1 = 1;
-                }
-                else if (j > 0)
-                {
-                    dp[i][j] = max(dp[i][j], dp[i][j - 1]);
-                }
+            cnt[i] = cnt[i & (i - 1)] + 1;
+        }
+        // cout << 1 << endl;
+        vector<vector<vector<bool>>> dp(n + 1, vector<vector<bool>>(130, vector<bool>(102, false)));
+        dp[1][v[0]][v[0]] = true;
 
-                if (a1 == 0 and b1 == 0)
+        // dp[i][j][k] subsequence from i to n where xor is j and last element is k
+
+        for (int i = 2; i <= n; i++)
+        {
+            int j = 0;
+            while (j <= 128)
+            {
+                int last = 1;
+                while (last <= 100)
                 {
-                    if (i > 0 and j <= 0)
+                    dp[i][j][last] = dp[i - 1][j][last];
+                    if (last == v[i])
                     {
-                        dp[i][j] = dp[i - 1][j];
+                        int g = j ^ last;
+                        int l = 0;
+                        while (l < last)
+                        {
+                            if (g <= 128 and dp[i - 1][g][l] == true and cnt[last] >= cnt[g])
+                            {
+                                dp[i][j][last] = true;
+                            }
+                            l++;
+                        }
                     }
-                    else if (j > 0 and i <= 0)
-                    {
-                        dp[i][j] = dp[i][j - 1];
-                    }
-                    else if (i > 0 and j > 0)
-                    {
-                        dp[i][j] = max(dp[i][j - 1], dp[i - 1][j]);
-                    }
+                    last++;
+                }
+                j++;
+            }
+        }
+
+        map<int, int> ma;
+        for (int i = 0; i <= 128; i++)
+        {
+            for (int j = 0; j <= 100; j++)
+            {
+                if (dp[n][i][j] == true)
+                {
+                    ma[i]++;
                 }
             }
         }
-        cout << al + bl - dp[al][bl] << endl;
+        cout << ma.size() << endl;
     }
-    return 0;
 }

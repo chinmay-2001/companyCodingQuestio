@@ -53,58 +53,36 @@ int main()
 {
     int tc;
     cin >> tc;
-    cin.ignore();
+
     while (tc--)
     {
-        string a, b, c;
-        cin >> a >> b >> c;
+        int n;
+        cin >> n;
 
-        int al = a.length();
-        int bl = b.length();
-        vector<vector<int>> dp(al + 1, vector<int>(bl + 1, 0));
-        dp[0][0] = 0;
-        for (int i = 0; i <= al; i++)
+        int c1, c2, c3;
+        cin >> c1 >> c2 >> c3;
+
+        int co1, co2, co3;
+        cin >> co1 >> co2 >> co3;
+
+        int t1 = 2, t2 = 3, t3 = 5;
+
+        int mini = INT_MAX;
+
+        for (int i = 0; i <= c1; i++)
         {
-            for (int j = 0; j <= bl; j++)
+            for (int j = 0; j <= c2; j++)
             {
-                int a1 = 0, b1 = 0;
-                if (i > 0 and a[i - 1] == c[i + j - 1])
+                int t = t1 * i + t2 * j;
+                int req = n - t;
+                if (req >= 0 and req % t3 == 0 and req / t3 <= c3)
                 {
-                    dp[i][j] = max(dp[i][j], 1 + dp[i - 1][j]);
-                    a1 = 1;
-                }
-                else if (i > 0)
-                {
-                    dp[i][j] = max(dp[i][j], dp[i - 1][j]);
-                }
-                if (j > 0 and b[j - 1] == c[i + j - 1])
-                {
-                    dp[i][j] = max(dp[i][j], 1 + dp[i][j - 1]);
-                    b1 = 1;
-                }
-                else if (j > 0)
-                {
-                    dp[i][j] = max(dp[i][j], dp[i][j - 1]);
-                }
-
-                if (a1 == 0 and b1 == 0)
-                {
-                    if (i > 0 and j <= 0)
-                    {
-                        dp[i][j] = dp[i - 1][j];
-                    }
-                    else if (j > 0 and i <= 0)
-                    {
-                        dp[i][j] = dp[i][j - 1];
-                    }
-                    else if (i > 0 and j > 0)
-                    {
-                        dp[i][j] = max(dp[i][j - 1], dp[i - 1][j]);
-                    }
+                    int cost = i * co1 + j * co2 + (req / t3) * co3;
+                    mini = min(cost, mini);
                 }
             }
         }
-        cout << al + bl - dp[al][bl] << endl;
+        cout << mini << endl;
     }
     return 0;
 }

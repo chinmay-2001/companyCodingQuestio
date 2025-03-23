@@ -46,65 +46,44 @@ typedef unsigned long int uint32;
 typedef long long int int64;
 typedef unsigned long long int  uint64;
 
+bool isPrime(int n){
+int count=0;
+  for(int i=1;i<=sqrt(n);i++){
+    if(i*i==n){
+        count+=1;
+    }else if(n%i==0){
+        count+=2;
+    }
+  }
+  if(count ==2){
+    return true;
+  }
+  return false;
+}
 /* clang-format on */
-
+int greatest(int n)
+{
+    for (int j = n; j >= 1; j--)
+    {
+        if (isPrime(j))
+            return j;
+    }
+    return 0;
+}
 /* Main()  function */
 int main()
 {
     int tc;
     cin >> tc;
-    cin.ignore();
+
     while (tc--)
     {
-        string a, b, c;
-        cin >> a >> b >> c;
+        int n, m;
+        cin >> n >> m;
 
-        int al = a.length();
-        int bl = b.length();
-        vector<vector<int>> dp(al + 1, vector<int>(bl + 1, 0));
-        dp[0][0] = 0;
-        for (int i = 0; i <= al; i++)
-        {
-            for (int j = 0; j <= bl; j++)
-            {
-                int a1 = 0, b1 = 0;
-                if (i > 0 and a[i - 1] == c[i + j - 1])
-                {
-                    dp[i][j] = max(dp[i][j], 1 + dp[i - 1][j]);
-                    a1 = 1;
-                }
-                else if (i > 0)
-                {
-                    dp[i][j] = max(dp[i][j], dp[i - 1][j]);
-                }
-                if (j > 0 and b[j - 1] == c[i + j - 1])
-                {
-                    dp[i][j] = max(dp[i][j], 1 + dp[i][j - 1]);
-                    b1 = 1;
-                }
-                else if (j > 0)
-                {
-                    dp[i][j] = max(dp[i][j], dp[i][j - 1]);
-                }
-
-                if (a1 == 0 and b1 == 0)
-                {
-                    if (i > 0 and j <= 0)
-                    {
-                        dp[i][j] = dp[i - 1][j];
-                    }
-                    else if (j > 0 and i <= 0)
-                    {
-                        dp[i][j] = dp[i][j - 1];
-                    }
-                    else if (i > 0 and j > 0)
-                    {
-                        dp[i][j] = max(dp[i][j - 1], dp[i - 1][j]);
-                    }
-                }
-            }
-        }
-        cout << al + bl - dp[al][bl] << endl;
+        int x1 = greatest(n);
+        int x2 = greatest(m);
+        cout << x1 - x2 << endl;
     }
     return 0;
 }

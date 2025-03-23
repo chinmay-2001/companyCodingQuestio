@@ -77,6 +77,7 @@ int main()
                 {
                     dp[i][j] = max(dp[i][j], dp[i - 1][j]);
                 }
+
                 if (j > 0 and b[j - 1] == c[i + j - 1])
                 {
                     dp[i][j] = max(dp[i][j], 1 + dp[i][j - 1]);
@@ -89,17 +90,17 @@ int main()
 
                 if (a1 == 0 and b1 == 0)
                 {
-                    if (i > 0 and j <= 0)
+                    if (i > 0 and j == 0)
                     {
                         dp[i][j] = dp[i - 1][j];
                     }
-                    else if (j > 0 and i <= 0)
+                    else if (i == 0 and j > 0)
                     {
                         dp[i][j] = dp[i][j - 1];
                     }
                     else if (i > 0 and j > 0)
                     {
-                        dp[i][j] = max(dp[i][j - 1], dp[i - 1][j]);
+                        dp[i][j] = max(dp[i - 1][j], dp[i][j - 1]);
                     }
                 }
             }

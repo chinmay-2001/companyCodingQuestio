@@ -1,0 +1,200 @@
+Design and implement a relational schema (PostgreSQL preferred) for a mini OTT platform that manages users, plans, subscriptions, payments, content, and watch history. Then write queries and constraints that prove your design works at scale and is correct.
+
+users: {
+    id : primary key
+    first name:
+    last name:
+    email:  
+    phone:
+}
+
+subscription: {
+    id
+    type: free tire | 20$ | 30$
+    usersID:  Id
+}
+
+plans :{
+  amount:free | 30
+
+  permission:{
+
+  }
+
+  timeperiod:time
+
+  type: monthly | yearly | weekly | 
+}
+
+plan_to_amount:{
+
+
+}
+
+
+Integration {
+    stripe, autorize.net, webhook
+}
+
+payment_table{
+    created
+    id
+    custome_profile_id
+    cvv: encrpyted
+    expiry: encry
+    status:string
+    amount:float
+    subscriptionId:  id:
+}
+
+payment_log{
+    id:{}
+    status
+    metatdata:{}
+}
+
+
+content_metadata:{
+
+    id: 
+    movie_name
+    data
+
+}
+
+
+
+
+
+POST /orders so network retries don’t create duplicate orders. How do you validate input, store the Idempotency-Key and respond to retries?
+ 
+
+
+
+ Idempotency-key
+
+ table
+
+ cachin
+
+
+ api ->  {
+
+    check IdempotencyKey{
+
+    }
+
+    transaction:{
+        IdempotencyKey: 490
+    }
+
+    payment{
+        
+    }
+    
+    close{
+
+    }
+
+ }
+
+Problem Statement
+You are given a list of menu items from a database.
+Each item has:
+an id
+a name
+an optional parent_id (which references another item’s id)
+
+Write a function that builds a hierarchical (nested) navigation menu structure from this flat list.
+
+Input Example
+[
+  { "id": 1, "name": "Home", "parent_id": null },
+  { "id": 2, "name": "Products", "parent_id": null },
+  { "id": 3, "name": "Electronics", "parent_id": 2 },
+  { "id": 4, "name": "Laptops", "parent_id": 3 },
+  { "id": 5, "name": "Phones", "parent_id": 3 },
+  { "id": 6, "name": "Contact", "parent_id": null },
+  { "id": 7, "name": "About", "parent_id": null },
+  { "id": 8, "name": "Team", "parent_id": 7 },
+  { "id": 9, "name": "Careers", "parent_id": 7 }
+]
+
+Expected Output
+[
+  {
+    "id": 1,
+    "name": "Home",
+    "children": []
+  },
+  {
+    "id": 2,
+    "name": "Products",
+    "children": [
+      {
+        "id": 3,
+        "name": "Electronics",
+        "children": [
+          { "id": 4, "name": "Laptops", "children": [] },
+          { "id": 5, "name": "Phones", "children": [] }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "name": "Contact",
+    "children": []
+  },
+  {
+    "id": 7,
+    "name": "About",
+    "children": [
+      { "id": 8, "name": "Team", "children": [] },
+      { "id": 9, "name": "Careers", "children": [] }
+    ]
+  }
+]
+
+//content_metadata
+main{
+
+    map={
+        id:[childrens]
+    }
+
+    for(election of Electronics ){
+        if(parent_id){
+            map[parent_id].push(electionc);
+        }
+    }
+
+    nestedData(electionc){
+        st desire_object={}
+        for(electronis){
+        desire_object.id=elect7ionc.id
+            design_object.name=electionc.name
+            design_object.childern= nestedData();
+
+            desrired_output.push(design_object)
+        }
+    }
+
+    convertToDisired(){
+        desrired_output=[]
+
+        for(electionc of Electronics){
+            const desire_object={
+
+             }
+            desire_object.id=electionc.id
+            design_object.name=electionc.name
+            design_object.childern = nestedData();
+             desrired_output=nestedData(electo)
+
+        }
+        
+    }
+
+}
+ 

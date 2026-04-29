@@ -90,6 +90,7 @@ int main()
             {
                 int x1 = floor((double)n2 / 2);
                 int x2 = ceil((double)n2 / 2);
+                cout << "n1:" << n1 << " x1:" << x1 << " x2:" << x2 << endl;
                 if (x1 == n1)
                 {
                     q1.pop();
@@ -117,6 +118,7 @@ int main()
             }
         }
 
+        cout << q1.size() << " " << q2.size() << endl;
         if (np == 1 and q1.size() != q2.size())
         {
             cout << "No" << endl;

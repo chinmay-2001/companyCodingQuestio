@@ -46,51 +46,43 @@ typedef unsigned long int uint32;
 typedef long long int int64;
 typedef unsigned long long int  uint64;
 
-
 /* clang-format on */
 
 /* Main()  function */
 int main()
 {
-
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
     int tc;
-    cin>>tc;
+    cin >> tc;
 
-    while(tc--){
-        int n,k,x;
-        cin>>n>>k>>x;
-        vi nums(n);
-        f(i,0,n)cin>>nums[i];
-        bool dp[n+1][k+1][x+1];
-        memset(dp,false,sizeof(dp));
+    while (tc--)
+    {
+        int n;
+        cin >> n;
+        vector<int> v(n);
+        f(i, 0, n) cin >> v[i];
 
-        dp[0][0][0]=1;
-
-        for(int i=1;i<=n;i++){
-            for(int j=0;j<=k;j++){
-                for(int m=0;m<=x;m++){
-                    dp[i][j][m]=(dp[i][j][m] or dp[i-1][j][m]);
-                    if(nums[i-1]<=j ){
-                        dp[i][j][m]= dp[i][j][m] || dp[i-1][j-nums[i-1]][m];
-                        if(m-nums[i-1]>=0){
-                            dp[i][j][m]= (dp[i][j][m] || dp[i-1][j-nums[i-1]][m-nums[i-1]]); 
-                        }
-                    }
-                    
-                }
+        // sort(v.begin(), v.end());
+        vector<int> rem;
+        rem.push_back(v[0]);
+        for (int i = 1; i < n; i++)
+        {
+            if (v[i - 1] != v[i])
+            {
+                rem.push_back(v[i]);
             }
         }
-        int cnt=0;
-        vector<int> ans;
-        for(int i=0;i<=x;i++){
-            if(dp[n][k][i]==1){
+        int cnt = 0;
+        for (int i = 1; i < rem.size() - 1; i++)
+        {
+            if (rem[i - 1] > rem[i] and rem[i + 1] > rem[i])
+            {
                 cnt++;
-                ans.push_back(i);
             }
         }
-        cout<<cnt<<endl;
-        for(auto i: ans)cout<<i<<" ";
-        cout<<endl;
+        cout << cnt + 1 << endl;
     }
     return 0;
 }

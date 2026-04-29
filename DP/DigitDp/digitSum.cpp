@@ -1,5 +1,3 @@
-// https://docs.google.com/document/d/1sdC79EQT1WJindKKfyaHEB6plr-PePeC9lz23Xav6lk/edit
-
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -48,32 +46,76 @@ typedef unsigned long int uint32;
 typedef long long int int64;
 typedef unsigned long long int  uint64;
 
-
 /* clang-format on */
 
 /* Main()  function */
+vector<int> digits;
+pair<ll, ll> dp[20][2];
+
+bool vis[20][2];
+pair<ll, ll> dfs(int pos, int tight)
+{
+    if (pos == digits.size())
+    {
+        return {1, 0};
+    }
+
+    if (vis[pos][tight])
+    {
+        return dp[pos][tight];
+    }
+
+    int limit = tight ? digits[pos] : 9;
+    ll cnt = 0, sum = 0;
+    for (int i = 0; i <= limit; i++)
+    {
+        int newtight = tight && (i == limit);
+
+        pair<ll, ll> ret = dfs(pos + 1, newtight);
+
+        cnt += ret.first;
+        sum += ret.second + (ll)i * ret.first;
+    }
+    vis[pos][tight] = true;
+    return dp[pos][tight] = {cnt, sum};
+}
+
+ll solve(ll n)
+{
+    if (n < 0)
+        return 0;
+
+    digits.clear();
+    ll temp = n;
+    while (temp > 0)
+    {
+        digits.push_back(temp % 10);
+        temp /= 10;
+    }
+
+    reverse(digits.begin(), digits.end());
+    memset(vis, 0, sizeof(vis));
+    return dfs(0, 1).second;
+}
 int main()
 {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
     int tc;
-    cin>>tc ;
-    while(tc--){
-        int n;
-        cin>>n;
-        vector<int> nums(n);
-        for(int i=0;i<n;i++)cin>>nums[i];
-        vector<vector<int>> dp(n+1,vector<int>(3,0));
-        dp[0][1]=nums[0];
-        dp[0][2]=1e9;
-        dp[1][1]=1e9;
-        dp[1][2]=nums[0]+nums[2]+nums[1];
+    cin >> tc;
 
-        for(int i=2;i<n-1;i++){
-            dp[i][1]=nums[i]+min(dp[i-2][1],dp[i-2][2]);
-            dp[i][2]=nums[i]+nums[i+1]+dp[i-1][1];
+    while (tc--)
+    {
+
+        int a, b;
+        cin >> a >> b;
+        if (a == -1 and b == -1)
+        {
+            cout << 0 << endl;
         }
-        dp[n-1][1]=nums[n-1]+min(dp[n-3][1],dp[n-3][2]);
-        dp[n-1][2]=1e9;
-        cout<<min(dp[n-1][1],min(dp[n-2][1],dp[n-2][2]))<<endl;
+
+        cout << solve(b) - solve(a - 1) << endl;
     }
     return 0;
 }

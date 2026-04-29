@@ -1,0 +1,1 @@
+{"name":"Local: Book_Shop","url":"c:\\Users\\Chinm\\OneDrive\\Desktop\\CodingQuestion\\Book_Shop.cpp","tests":[{"id":1759954628170,"input":"1\n4 10\n4 8 5 3\n5 12 8 1\n","output":"13"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"c:\\Users\\Chinm\\OneDrive\\Desktop\\CodingQuestion\\Book_Shop.cpp","group":"local","local":true}

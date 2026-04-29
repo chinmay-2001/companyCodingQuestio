@@ -47,6 +47,7 @@
     "limits": "cpp",
     "concepts": "cpp",
     "xlocinfo": "cpp",
-    "iosfwd": "cpp"
+    "iosfwd": "cpp",
+    "cstdlib": "cpp"
   }
 }
